@@ -169,6 +169,51 @@
 						No sites discovered yet. Run bench discovery first.
 					</p>
 				</section>
+
+				<section class="rounded-md border bg-white p-5">
+					<div class="flex items-start justify-between gap-4">
+						<div>
+							<h3 class="text-lg font-semibold text-gray-900">Site Onboarding</h3>
+							<p class="mt-1 text-sm text-gray-600">
+								After the managed bench exists, import the discovered sites as
+								managed site records and optionally start file restoration from the
+								existing bench.
+							</p>
+						</div>
+						<Button
+							variant="ghost"
+							:route="{ name: 'Server Play', params: { id: latestPlay.name } }"
+							v-if="latestPlay"
+						>
+							Open Latest Play
+						</Button>
+					</div>
+
+					<div class="mt-5 flex flex-wrap gap-3">
+						<Button
+							variant="solid"
+							@click="createManagedSites"
+							:disabled="!state.can_create_sites"
+							:loading="$resources.createManagedSites.loading"
+						>
+							Create Managed Sites
+						</Button>
+						<Button
+							variant="outline"
+							@click="restoreSiteFiles"
+							:disabled="!state.can_restore_files"
+							:loading="$resources.restoreSiteFiles.loading"
+						>
+							Restore Site Files
+						</Button>
+						<Button
+							variant="ghost"
+							:route="{ name: 'Server Detail Plays', params: { name: server } }"
+						>
+							View Server Plays
+						</Button>
+					</div>
+				</section>
 			</div>
 
 			<div class="space-y-5">
@@ -204,6 +249,32 @@
 						</div>
 					</dl>
 				</section>
+
+				<section class="rounded-md border bg-white p-5">
+					<div class="flex items-center justify-between gap-4">
+						<h3 class="text-lg font-semibold text-gray-900">Recent Plays</h3>
+						<Badge :label="`${state.recent_plays?.length || 0} visible`" />
+					</div>
+					<div v-if="state.recent_plays?.length" class="mt-4 space-y-3">
+						<RouterLink
+							v-for="play in state.recent_plays"
+							:key="play.name"
+							:to="{ name: 'Server Play', params: { id: play.name } }"
+							class="block rounded-md border px-4 py-3 transition hover:border-gray-400"
+						>
+							<div class="flex items-center justify-between gap-3">
+								<div class="font-medium text-gray-900">{{ play.play }}</div>
+								<Badge :label="play.status || 'Unknown'" />
+							</div>
+							<div class="mt-1 text-xs text-gray-500">
+								{{ play.server }} · {{ formatTimestamp(play.creation) }}
+							</div>
+						</RouterLink>
+					</div>
+					<p v-else class="mt-4 text-sm text-gray-500">
+						No related plays have been recorded yet.
+					</p>
+				</section>
 			</div>
 		</div>
 	</div>
@@ -211,6 +282,7 @@
 
 <script>
 import { Badge, Button, FormControl } from 'frappe-ui';
+import { date } from '../../utils/format';
 
 export default {
 	name: 'ServerBenchOnboarding',
@@ -287,6 +359,30 @@ export default {
 				},
 			};
 		},
+		createManagedSites() {
+			return {
+				url: 'press.api.selfhosted.create_sites_from_existing_bench',
+				makeParams: () => ({
+					server: this.server,
+				}),
+				onSuccess: (data) => {
+					this.statusMessage = data.message || 'Managed site records created';
+					this.applyState(data);
+				},
+			};
+		},
+		restoreSiteFiles() {
+			return {
+				url: 'press.api.selfhosted.restore_site_files_from_existing_bench',
+				makeParams: () => ({
+					server: this.server,
+				}),
+				onSuccess: (data) => {
+					this.statusMessage = data.message || 'Site file restoration started';
+					this.applyState(data);
+				},
+			};
+		},
 	},
 	computed: {
 		resourceError() {
@@ -294,8 +390,13 @@ export default {
 				this.$resources.benchOnboardingState.error ||
 				this.$resources.saveBenchConfiguration.error ||
 				this.$resources.discoverExistingBench.error ||
-				this.$resources.createManagedBench.error
+				this.$resources.createManagedBench.error ||
+				this.$resources.createManagedSites.error ||
+				this.$resources.restoreSiteFiles.error
 			);
+		},
+		latestPlay() {
+			return this.state.recent_plays?.[0] || null;
 		},
 	},
 	methods: {
@@ -315,6 +416,17 @@ export default {
 		createManagedBench() {
 			this.statusMessage = '';
 			this.$resources.createManagedBench.submit();
+		},
+		createManagedSites() {
+			this.statusMessage = '';
+			this.$resources.createManagedSites.submit();
+		},
+		restoreSiteFiles() {
+			this.statusMessage = '';
+			this.$resources.restoreSiteFiles.submit();
+		},
+		formatTimestamp(value) {
+			return value ? date(value, 'llll') : 'Unknown time';
 		},
 	},
 };

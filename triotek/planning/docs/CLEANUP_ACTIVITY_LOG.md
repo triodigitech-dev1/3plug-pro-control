@@ -512,3 +512,14 @@ Reason:
 
 * 3plug needs the real server -> bench path working in the product UI, not just as Desk-only self-hosted actions
 * this keeps us building directly on Press's existing self-hosted behavior while making the operator flow usable inside the actual 3plug control plane
+
+### 2026-04-09
+
+Change:
+
+* extended managed bench onboarding with site import and file-restore actions on top of the existing self-hosted Press flow
+* added recent Ansible play visibility directly to the bench onboarding page so operators can track the run history behind discovery and restoration without leaving the flow
+
+Reason:
+
+* the real product path is server -> bench -> site -> jobs/plays, so the bench onboarding surface needed to continue into site onboarding instead of stopping halfway

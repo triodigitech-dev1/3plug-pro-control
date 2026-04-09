@@ -179,6 +179,14 @@ def _get_self_hosted_server_for_managed_server(server: str):
 
 
 def _serialize_self_hosted_bench_state(self_hosted_server):
+	play_servers = [value for value in [self_hosted_server.name, self_hosted_server.server] if value]
+	recent_plays = frappe.get_all(
+		"Ansible Play",
+		filters={"server": ("in", play_servers)},
+		fields=["name", "play", "status", "creation", "server"],
+		order_by="creation desc",
+		limit=8,
+	)
 	return {
 		"self_hosted_server": self_hosted_server.name,
 		"server": self_hosted_server.server,
@@ -214,6 +222,12 @@ def _serialize_self_hosted_bench_state(self_hosted_server):
 			and not self_hosted_server.release_group
 		),
 		"can_create_sites": bool(self_hosted_server.release_group and self_hosted_server.sites),
+		"can_restore_files": bool(
+			self_hosted_server.release_group
+			and self_hosted_server.bench_directory
+			and any(row.site for row in self_hosted_server.sites or [])
+		),
+		"recent_plays": recent_plays,
 	}
 
 
@@ -266,4 +280,34 @@ def create_release_group_from_existing_bench(server: str):
 	self_hosted_server.reload()
 	state = _serialize_self_hosted_bench_state(self_hosted_server)
 	state["message"] = "Managed bench created from the discovered existing bench"
+	return state
+
+
+@frappe.whitelist()
+def create_sites_from_existing_bench(server: str):
+	self_hosted_server = _get_self_hosted_server_for_managed_server(server)
+	if not self_hosted_server.release_group:
+		frappe.throw("Create the managed bench before importing sites from it")
+	if not self_hosted_server.sites:
+		frappe.throw("Discover the existing bench sites before importing them")
+	self_hosted_server.create_new_sites()
+	self_hosted_server.reload()
+	state = _serialize_self_hosted_bench_state(self_hosted_server)
+	state["message"] = "Managed site records created from the discovered bench sites"
+	return state
+
+
+@frappe.whitelist()
+def restore_site_files_from_existing_bench(server: str):
+	self_hosted_server = _get_self_hosted_server_for_managed_server(server)
+	if not self_hosted_server.release_group:
+		frappe.throw("Create the managed bench before restoring site files")
+	if not self_hosted_server.bench_directory:
+		frappe.throw("Bench directory is required before restoring site files")
+	if not any(row.site for row in self_hosted_server.sites or []):
+		frappe.throw("Create the managed site records before restoring site files")
+	self_hosted_server.restore_files()
+	self_hosted_server.reload()
+	state = _serialize_self_hosted_bench_state(self_hosted_server)
+	state["message"] = "Site file restoration has started. Track the related plays for progress."
 	return state
