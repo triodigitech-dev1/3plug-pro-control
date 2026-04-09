@@ -52,6 +52,7 @@ ALLOWED_DOCTYPES = [
 	"Deploy Candidate Difference App",
 	"Agent Job",
 	"Agent Job Type",
+	"Forensic Event",
 	"Common Site Config",
 	"Server",
 	"Database Server",

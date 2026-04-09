@@ -397,3 +397,16 @@ Reason:
 
 * these were lingering marketplace payout and payment-era terms after the broader cleanup
 * this makes the remaining operator-facing surface more consistent before we declare the payment cleanup substantially complete
+
+### 2026-04-09
+
+Change:
+
+* added a first forensic-layer slice with a new `Forensic Event` doctype
+* wired automatic forensic capture from `Agent Job`, `Site Activity`, and `Server Activity`
+* exposed `Forensic Event` in the client allowlist and Press workspace so the logs are inspectable
+
+Reason:
+
+* this turns the post-cleanup plan into real product behavior instead of more planning-only work
+* it gives 3plug-control an initial searchable evidence trail for operator and system actions

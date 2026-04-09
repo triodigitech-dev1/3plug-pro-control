@@ -158,9 +158,16 @@ has_permission = {
 # Hook on document methods and events
 
 doc_events = {
+	"Agent Job": {
+		"after_insert": "press.press.doctype.forensic_event.forensic_event.capture_agent_job_insert",
+		"on_update": "press.press.doctype.forensic_event.forensic_event.capture_agent_job_update",
+	},
 	"Site": {
 		"before_insert": "press.press.doctype.team.team.validate_site_creation",
 		"after_insert": "press.press.doctype.press_role.press_role.create_user_resource",
+	},
+	"Site Activity": {
+		"after_insert": "press.press.doctype.forensic_event.forensic_event.capture_site_activity_insert",
 	},
 	"Release Group": {
 		"after_insert": "press.press.doctype.press_role.press_role.create_user_resource",
@@ -170,6 +177,9 @@ doc_events = {
 			"press.press.doctype.press_role.press_role.create_user_resource",
 			"press.press.doctype.server_firewall.server_firewall.from_server",
 		],
+	},
+	"Server Activity": {
+		"after_insert": "press.press.doctype.forensic_event.forensic_event.capture_server_activity_insert",
 	},
 }
 
