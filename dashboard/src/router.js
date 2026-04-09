@@ -3,6 +3,10 @@ import { getTeam } from './data/team';
 import generateRoutes from './objects/generateRoutes';
 import session from './data/session';
 
+const deferredBillingPage = () => import('./pages/Billing.vue');
+const deferredPartnerPage = () => import('./pages/Partners.vue');
+const deferredPartnerAdminPage = () => import('./pages/PartnerAdmin.vue');
+
 const DEFERRED_ROUTE_NAMES = new Set([
 	'Signup',
 	'Setup Account',
@@ -203,47 +207,47 @@ let router = createRouter({
 		{
 			name: 'Billing',
 			path: '/billing',
-			component: () => import('./pages/Billing.vue'),
+			component: deferredBillingPage,
 			children: [
 				{
 					name: 'BillingOverview',
 					path: '',
-					component: () => import('./pages/BillingOverview.vue'),
+					component: deferredBillingPage,
 				},
 				{
 					name: 'BillingForecast',
 					path: 'forecast',
-					component: () => import('./pages/BillingForecast.vue'),
+					component: deferredBillingPage,
 				},
 				{
 					name: 'BillingInvoices',
 					path: 'invoices',
-					component: () => import('./pages/BillingInvoices.vue'),
+					component: deferredBillingPage,
 				},
 				{
 					name: 'BillingBalances',
 					path: 'balances',
-					component: () => import('./pages/BillingBalances.vue'),
+					component: deferredBillingPage,
 				},
 				{
 					name: 'BillingPaymentMethods',
 					path: 'payment-methods',
-					component: () => import('./pages/BillingPaymentMethods.vue'),
+					component: deferredBillingPage,
 				},
 				{
 					name: 'BillingMarketplacePayouts',
 					path: 'payouts',
-					component: () => import('./pages/BillingMarketplacePayouts.vue'),
+					component: deferredBillingPage,
 				},
 				{
 					name: 'BillingMpesaInvoices',
 					path: 'mpesa-invoices',
-					component: () => import('./pages/BillingMpesaInvoices.vue'),
+					component: deferredBillingPage,
 				},
 				{
 					name: 'BillingUPIAutopay',
 					path: 'upi-autopay',
-					component: () => import('./pages/BillingUPIAutopay.vue'),
+					component: deferredBillingPage,
 				},
 			],
 		},
@@ -295,34 +299,32 @@ let router = createRouter({
 					name: 'SettingsPartnerAdmin',
 					path: 'partner-admin',
 					redirect: { name: 'PartnerList' },
-					component: () => import('./pages/PartnerAdmin.vue'),
+					component: deferredPartnerAdminPage,
 					children: [
 						{
 							name: 'PartnerList',
 							path: 'partner-list',
-							component: () => import('./pages/PartnerList.vue'),
+							component: deferredPartnerAdminPage,
 						},
 						{
 							name: 'CertificateList',
 							path: 'certificate-list',
-							component: () => import('./pages/PartnerAdminCertificates.vue'),
+							component: deferredPartnerAdminPage,
 						},
 						{
 							name: 'PartnerAdminLeads',
 							path: 'partner-admin-lead-list',
-							component: () => import('./pages/PartnerAdminLeads.vue'),
+							component: deferredPartnerAdminPage,
 						},
 						{
 							name: 'PartnerAdminResources',
 							path: 'admin-resources',
-							component: () =>
-								import('./components/partners/PartnerResources.vue'),
+							component: deferredPartnerAdminPage,
 						},
 						{
 							name: 'PartnerAdminAudits',
 							path: 'admin-audits',
-							component: () =>
-								import('./components/partners/PartnerAdminAudits.vue'),
+							component: deferredPartnerAdminPage,
 						},
 					],
 				},
@@ -350,81 +352,76 @@ let router = createRouter({
 			name: 'Partnership',
 			path: '/partners',
 			redirect: { name: 'PartnerOverview' },
-			component: () => import('./pages/Partners.vue'),
+			component: deferredPartnerPage,
 			children: [
 				{
 					name: 'PartnerOverview',
 					path: 'overview',
-					component: () => import('./components/partners/PartnerOverview.vue'),
+					component: deferredPartnerPage,
 				},
 				{
 					name: 'PartnerWebsiteDetails',
 					path: 'website-details',
-					component: () =>
-						import('./components/partners/PartnerWebsiteDetails.vue'),
+					component: deferredPartnerPage,
 				},
 				{
 					name: 'PartnerCustomers',
 					path: 'customers',
-					component: () => import('./components/partners/PartnerCustomers.vue'),
+					component: deferredPartnerPage,
 				},
 				{
 					name: 'PartnerLeads',
 					path: 'partner-leads',
-					component: () => import('./components/partners/PartnerLeads.vue'),
+					component: deferredPartnerPage,
 				},
 				{
 					name: 'PartnerCertificates',
 					path: 'certificates',
-					component: () =>
-						import('./components/partners/PartnerCertificates.vue'),
+					component: deferredPartnerPage,
 				},
 				{
 					name: 'PartnerResources',
 					path: 'resources',
-					component: () => import('./components/partners/PartnerResources.vue'),
+					component: deferredPartnerPage,
 				},
 				{
 					name: 'PartnerContributions',
 					path: 'contributions',
-					component: () =>
-						import('./components/partners/PartnerContributionList.vue'),
+					component: deferredPartnerPage,
 				},
 				{
 					name: 'PartnerAudits',
 					path: 'audits',
-					component: () => import('./components/partners/PartnerAudits.vue'),
+					component: deferredPartnerPage,
 				},
 				{
 					name: 'PartnerNCList',
 					path: 'audit/:partner_audit?',
-					component: () => import('./components/partners/PartnerNCList.vue'),
+					component: deferredPartnerPage,
 					props: true,
 					children: [
 						{
 							name: 'PartnerNCSummary',
 							path: 'nc-summary/:nc?',
 							props: true,
-							component: () =>
-								import('./components/partners/PartnerNCSummary.vue'),
+							component: deferredPartnerPage,
 						},
 					],
 				},
 				{
 					name: 'LocalPaymentSetup',
 					path: 'local-payment-setup',
-					component: () =>
-						import('./components/partners/PartnerLocalPaymentSetup.vue'),
+					component: deferredPartnerPage,
 				},
 				{
 					name: 'PartnerPayout',
 					path: 'payment-payout',
-					component: () => import('./components/partners/PartnerPayout.vue'),
+					component: deferredPartnerPage,
 				},
 				{
 					name: 'PartnerDashboard',
 					path: 'partner-dashboard',
-					component: () => import('./components/partners/PartnerDashboard.vue'),
+					component: deferredPartnerPage,
 				},
 			],
 		},

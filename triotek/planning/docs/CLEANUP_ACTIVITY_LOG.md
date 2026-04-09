@@ -173,3 +173,15 @@ Reason:
 
 * this trims more imported Press UI logic from reachable route roots without forcing immediate deletion of deeper child pages
 * it keeps cleanup low risk while making the deferred scope more obvious inside the codebase
+
+### 2026-04-08
+
+Change:
+
+* repointed deferred billing, partnership, and partner-admin child routes to their already-neutralized root pages
+* kept the original deferred route names intact while removing many deep child-page imports from the live router
+
+Reason:
+
+* this reduces more imported Press surface without risking named-route breakage in existing code
+* it keeps the route tree stable while trimming deferred dashboard dependencies one layer deeper
