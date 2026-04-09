@@ -461,3 +461,16 @@ Reason:
 
 * raw events are useful for evidence, but operators also need a quicker way to spot repeated failures without rebuilding the full old Press incident subsystem
 * this keeps 3plug focused on single-server operational value instead of spending more time on low-value leftover surfaces
+
+### 2026-04-09
+
+Change:
+
+* turned the home dashboard into a 3plug control center instead of a thin generic Press landing page
+* expanded `Team.get_home_data` to return server, bench, site, job, and forensic signal summaries for the current operator team
+* made the control center show the main operator spine together in one place: managed server, benches, sites, active jobs, and open forensic signals
+
+Reason:
+
+* the actual product is not “cleaned Press” by itself; it needs an operator-facing surface that reflects the single-server 3plug model
+* this starts turning the imported Press base into the real 3plug product instead of spending more cycles on lower-value leftover areas

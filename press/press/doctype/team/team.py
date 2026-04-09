@@ -190,13 +190,143 @@ class Team(Document):
 
 	@frappe.whitelist()
 	def get_home_data(self):
+		from press.press.doctype.forensic_event.forensic_event import fetch_forensic_incident_signals
+
+		servers = frappe.get_all(
+			"Server",
+			{"team": self.name, "status": ["!=", "Archived"]},
+			["name", "title", "status", "cluster", "is_unified_server"],
+			order_by="modified desc",
+			limit_page_length=3,
+		)
+		benches = frappe.get_all(
+			"Bench",
+			{"team": self.name, "status": ["!=", "Archived"]},
+			["name", "status", "server", "group"],
+			order_by="modified desc",
+			limit_page_length=5,
+		)
+		sites = frappe.db.get_all(
+			"Site",
+			{"team": self.name, "status": ["!=", "Archived"]},
+			["name", "host_name", "status", "bench", "server"],
+			order_by="modified desc",
+			limit_page_length=5,
+		)
+		server_names = [server.name for server in servers]
+		bench_names = [bench.name for bench in benches]
+		site_names = [site.name for site in sites]
+		recent_jobs = self._get_recent_team_jobs(server_names, bench_names, site_names)
+		open_signals = fetch_forensic_incident_signals(
+			hours=72,
+			min_occurrences=2,
+			team=self.name,
+			signal_state="Open",
+		)
+		recent_signals = fetch_forensic_incident_signals(
+			hours=72,
+			min_occurrences=2,
+			team=self.name,
+		)[:5]
+
 		return {
-			"sites": frappe.db.get_all(
-				"Site",
-				{"team": self.name, "status": ["!=", "Archived"]},
-				["name", "host_name", "status"],
-			),
+			"summary": {
+				"server_count": frappe.db.count(
+					"Server", {"team": self.name, "status": ["!=", "Archived"]}
+				),
+				"active_server_count": frappe.db.count(
+					"Server", {"team": self.name, "status": "Active"}
+				),
+				"bench_count": frappe.db.count(
+					"Bench", {"team": self.name, "status": ["!=", "Archived"]}
+				),
+				"active_bench_count": frappe.db.count(
+					"Bench", {"team": self.name, "status": "Active"}
+				),
+				"broken_bench_count": frappe.db.count(
+					"Bench", {"team": self.name, "status": "Broken"}
+				),
+				"site_count": frappe.db.count(
+					"Site", {"team": self.name, "status": ["!=", "Archived"]}
+				),
+				"active_site_count": frappe.db.count(
+					"Site", {"team": self.name, "status": "Active"}
+				),
+				"broken_site_count": frappe.db.count(
+					"Site", {"team": self.name, "status": "Broken"}
+				),
+				"active_job_count": self._count_active_team_jobs(
+					server_names, bench_names, site_names
+				),
+				"open_signal_count": len(open_signals),
+			},
+			"servers": servers,
+			"benches": benches,
+			"sites": sites,
+			"recent_jobs": recent_jobs,
+			"recent_signals": recent_signals,
 		}
+
+	def _get_recent_team_jobs(self, server_names: list[str], bench_names: list[str], site_names: list[str]):
+		if not (server_names or bench_names or site_names):
+			return []
+
+		AgentJob = frappe.qb.DocType("Agent Job")
+		query = (
+			frappe.qb.from_(AgentJob)
+			.select(
+				AgentJob.name,
+				AgentJob.job_type,
+				AgentJob.status,
+				AgentJob.site,
+				AgentJob.bench,
+				AgentJob.server,
+				AgentJob.owner,
+				AgentJob.creation,
+				AgentJob.duration,
+				AgentJob.end,
+			)
+			.orderby(AgentJob.creation, order=frappe.qb.desc)
+			.limit(5)
+		)
+
+		filters = []
+		if site_names:
+			filters.append(AgentJob.site.isin(site_names))
+		if bench_names:
+			filters.append(AgentJob.bench.isin(bench_names))
+		if server_names:
+			filters.append(AgentJob.server.isin(server_names))
+		for condition in filters[1:]:
+			filters[0] = filters[0] | condition
+
+		return query.where(filters[0]).run(as_dict=True)
+
+	def _count_active_team_jobs(
+		self, server_names: list[str], bench_names: list[str], site_names: list[str]
+	) -> int:
+		if not (server_names or bench_names or site_names):
+			return 0
+
+		AgentJob = frappe.qb.DocType("Agent Job")
+		query = (
+			frappe.qb.from_(AgentJob)
+			.select(Count("*"))
+			.where(AgentJob.status.isin(["Pending", "Running"]))
+		)
+
+		filters = []
+		if site_names:
+			filters.append(AgentJob.site.isin(site_names))
+		if bench_names:
+			filters.append(AgentJob.bench.isin(bench_names))
+		if server_names:
+			filters.append(AgentJob.server.isin(server_names))
+		for condition in filters[1:]:
+			filters[0] = filters[0] | condition
+
+		result = query.where(filters[0]).run()
+		return result[0][0] if result else 0
 
 	def before_validate(self):
 		self.auth_relaxed_permissions()

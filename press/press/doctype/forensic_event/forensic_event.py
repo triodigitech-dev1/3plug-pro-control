@@ -100,7 +100,9 @@ def fetch_forensic_events_for_export(filters=None):
 
 
 @frappe.whitelist()
-def fetch_forensic_incident_signals(hours=72, min_occurrences=2, signal_state=None, peak_severity=None):
+def fetch_forensic_incident_signals(
+	hours=72, min_occurrences=2, signal_state=None, peak_severity=None, team=None
+):
 	hours = max(int(hours or 72), 1)
 	min_occurrences = max(int(min_occurrences or 2), 1)
 	from_time = frappe.utils.add_to_date(frappe.utils.now_datetime(), hours=-hours, as_datetime=True)
@@ -123,9 +125,13 @@ def fetch_forensic_incident_signals(hours=72, min_occurrences=2, signal_state=No
 		"job",
 		"summary",
 	]
+	filters = {"creation": (">=", from_time)}
+	if team:
+		filters["team"] = team
+
 	events = frappe.get_all(
 		"Forensic Event",
-		filters={"creation": (">=", from_time)},
+		filters=filters,
 		fields=fields,
 		order_by="creation desc",
 		limit_page_length=5000,
