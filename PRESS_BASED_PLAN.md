@@ -34,6 +34,8 @@ The initial product adaptation should simplify Press's wider infrastructure mode
 * many sites on those benches
 * Triotek-controlled app and stack governance
 
+This simplification should preserve Press's record, dashboard, and job model rather than collapse back into a CLI-only tool.
+
 ## First scope for 3plug-control
 
 Backend:
@@ -70,9 +72,11 @@ Do not keep re-implementing large parts of Press beside Press if the local Press
 
 ## Immediate implementation direction
 
-1. define the first Press-derived 3plug scope for single-server operation
-2. identify which Press doctypes and dashboard areas can be reused with minimal reshaping
-3. scaffold backend app structure
-4. scaffold dashboard structure
-5. port validated bench/site/job flows from the coordination repo into backend job methods
-6. expose those flows through UI pages instead of shell-only interaction
+1. lock the first product definition in `docs/V1_PRODUCT.md`
+2. lock the adaptation boundaries in `docs/SINGLE_SERVER_ADAPTATION.md`
+3. define the selective Press adoption plan in `docs/COPY_FROM_PRESS_PLAN.md`
+4. identify which Press doctypes and dashboard areas can be reused with minimal reshaping
+5. scaffold backend app structure
+6. scaffold dashboard structure
+7. port validated bench/site/job flows from the coordination repo into backend job methods
+8. expose those flows through UI pages instead of shell-only interaction

@@ -1,6 +1,6 @@
 # 3plug Control
 
-3plug Control is the future Triotek control plane derived from Press.
+3plug Control is Triotek's Press-based control plane.
 
 The direction is not to rebuild Press behavior from scratch beside Press.
 
@@ -10,6 +10,7 @@ The direction is:
 * adapt it into Triotek's 3plug product
 * narrow the first operating model to one managed server
 * keep Bench-first lifecycle management as the first product scope
+* define the product clearly before copying or reshaping large parts of Press
 
 ## Base reference
 
@@ -23,6 +24,18 @@ Important reference areas:
 * `../frappe-press/dashboard`
 * `../frappe-press/press/agent.py`
 * `../frappe-press/press/press/doctype`
+
+## What 3plug v1 is
+
+The first real 3plug release should be a Press-style operator platform for one managed server.
+
+It should let Triotek:
+
+* register and inspect the managed server
+* register and inspect multiple benches on that server
+* create and inspect multiple sites on those benches
+* manage approved app sources and installable stacks
+* run actions through recorded jobs instead of shell-only foreground execution
 
 ## First product adaptation
 
@@ -46,7 +59,14 @@ This repo now mirrors the broad Press split:
 
 ## What comes next
 
-1. define the first 3plug doctypes from the Press model
-2. define the first dashboard pages from the Press dashboard model
-3. define the first agent/job flows for single-server Bench operations
-4. start porting validated 3plug prototype behavior into this real control-plane shape
+1. lock the v1 product definition and single-server adaptation
+2. define the first 3plug doctypes from the Press model
+3. define the first dashboard pages from the Press dashboard model
+4. define the first agent/job flows for single-server Bench operations
+5. copy or port only the Press slices needed for that first scope
+
+See:
+
+* `docs/V1_PRODUCT.md`
+* `docs/SINGLE_SERVER_ADAPTATION.md`
+* `docs/COPY_FROM_PRESS_PLAN.md`
