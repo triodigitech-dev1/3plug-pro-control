@@ -233,3 +233,15 @@ Reason:
 
 * these files were no longer imported by reachable dashboard flows after the route and prompt cleanup passes
 * this reduces more Press-specific payment surface while preserving the smaller set still needed for kept account-detail flows
+
+### 2026-04-08
+
+Decision correction:
+
+* M-Pesa remains in 3plug scope and should not be trimmed as part of the generic billing cleanup
+* restored the deleted M-Pesa helper components for setup, gateway configuration, and partner payout flows
+
+Reason:
+
+* the product decision is to keep M-Pesa support
+* cleanup should continue to target generic deferred Press billing surfaces without removing the regional payment path we still want
