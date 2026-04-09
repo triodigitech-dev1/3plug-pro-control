@@ -69,4 +69,4 @@ Reason:
 
 Commit:
 
-* pending
+* `8665952` `Guard deferred routes and settings surfaces`
