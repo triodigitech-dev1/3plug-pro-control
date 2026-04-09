@@ -123,6 +123,23 @@ Commit:
 
 ### 2026-04-08
 
+Change:
+
+* removed deferred billing and partner permission controls from the role-permissions UI
+* renamed marketplace permission wording to a more neutral `Apps`
+* left the underlying backend role fields intact for now
+
+Reason:
+
+* this is a safe permissions-surface cleanup pass
+* it reduces operator exposure to deferred Press product concepts without forcing a backend role-schema cut yet
+
+Commit:
+
+* pending
+
+### 2026-04-08
+
 Decision noted:
 
 * Docker is not currently a special blocker on the target server

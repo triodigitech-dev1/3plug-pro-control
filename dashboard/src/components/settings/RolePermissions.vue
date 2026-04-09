@@ -54,27 +54,6 @@
 				</div>
 			</div>
 		</div>
-		<div
-			v-if="team?.doc?.erpnext_partner || team?.doc?.is_desk_user"
-			class="space-y-2"
-		>
-			<div class="font-medium">Partner</div>
-			<div class="grid grid-cols-5 gap-2 text-base">
-				<div v-for="permission in permissionsPartner">
-					<div class="border rounded">
-						<Switch
-							size="sm"
-							:disabled="disabled || !$props.allow_partner"
-							:label="permission.label"
-							:model-value="$props[permission.key]"
-							@update:model-value="
-								(value: boolean) => $emit('update', permission.key, value)
-							"
-						/>
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
 </template>
 
@@ -91,15 +70,9 @@ const props = withDefaults(
 		all_release_groups?: number;
 		allow_bench_creation?: number;
 		allow_apps?: number;
-		allow_billing?: number;
-		allow_partner?: number;
 		allow_server_creation?: number;
 		allow_site_creation?: number;
 		allow_webhook_configuration?: number;
-		allow_dashboard?: number;
-		allow_customer?: number;
-		allow_leads?: number;
-		allow_contribution?: number;
 		disabled?: boolean;
 	}>(),
 	{
@@ -109,15 +82,9 @@ const props = withDefaults(
 		all_release_groups: 0,
 		allow_bench_creation: 0,
 		allow_apps: 0,
-		allow_billing: 0,
-		allow_partner: 0,
 		allow_server_creation: 0,
 		allow_site_creation: 0,
 		allow_webhook_configuration: 0,
-		allow_dashboard: 0,
-		allow_customer: 0,
-		allow_leads: 0,
-		allow_contribution: 0,
 		disabled: false,
 	},
 );
@@ -150,19 +117,11 @@ const permissionsGeneral = [
 	},
 	{
 		key: 'allow_apps',
-		label: 'Marketplace',
+		label: 'Apps',
 	},
 	{
 		key: 'allow_webhook_configuration',
 		label: 'Webhooks',
-	},
-	{
-		key: 'allow_billing',
-		label: 'Billing',
-	},
-	{
-		key: 'allow_partner',
-		label: 'Partner Management',
 	},
 ];
 
@@ -181,22 +140,4 @@ const permissionsResources = [
 	},
 ];
 
-const permissionsPartner = [
-	{
-		key: 'allow_dashboard',
-		label: 'Dashboard',
-	},
-	{
-		key: 'allow_customer',
-		label: 'Customer',
-	},
-	{
-		key: 'allow_leads',
-		label: 'Leads',
-	},
-	{
-		key: 'allow_contribution',
-		label: 'Contribution',
-	},
-];
 </script>

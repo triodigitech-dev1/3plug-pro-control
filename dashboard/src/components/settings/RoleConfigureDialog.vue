@@ -90,19 +90,8 @@
 							<div class="space-y-1 rounded border p-4">
 								<h2 class="mb-2 ml-2 font-semibold">Page Access</h2>
 								<Switch
-									v-model="allowBilling"
-									label="Allow Billing Access"
-									:disabled="adminAccess"
-								/>
-								<Switch
 									v-model="allowApps"
 									label="Allow Apps Access"
-									:disabled="adminAccess"
-								/>
-								<Switch
-									v-if="$team.doc.erpnext_partner"
-									v-model="allowPartner"
-									label="Allow Partner Access"
 									:disabled="adminAccess"
 								/>
 								<Switch
@@ -123,29 +112,6 @@
 								<Switch
 									v-model="allowWebhookConfiguration"
 									label="Allow Webhook Configuration"
-									:disabled="adminAccess"
-								/>
-							</div>
-							<div v-if="allowPartner" class="space-y-1 rounded border p-4">
-								<h2 class="mb-2 ml-2 font-semibold">Partner Permissions</h2>
-								<Switch
-									v-model="allowDashboard"
-									label="Allow Dashboard Access"
-									:disabled="adminAccess"
-								/>
-								<Switch
-									v-model="allowLeads"
-									label="Allow Leads Access"
-									:disabled="adminAccess"
-								/>
-								<Switch
-									v-model="allowCustomer"
-									label="Allow Customer Access"
-									:disabled="adminAccess"
-								/>
-								<Switch
-									v-model="allowContribution"
-									label="Allow Contribution Access"
 									:disabled="adminAccess"
 								/>
 							</div>
@@ -220,19 +186,6 @@ export default {
 				);
 			},
 		},
-		allowBilling: {
-			get() {
-				return !!this.role?.allow_billing;
-			},
-			set(value) {
-				this.$resources.role.setValue.submit(
-					{
-						allow_billing: value,
-					},
-					{ onSuccess: this.$session.roles.reload },
-				);
-			},
-		},
 		allowApps: {
 			get() {
 				return !!this.role?.allow_apps;
@@ -241,19 +194,6 @@ export default {
 				this.$resources.role.setValue.submit(
 					{
 						allow_apps: value,
-					},
-					{ onSuccess: this.$session.roles.reload },
-				);
-			},
-		},
-		allowPartner: {
-			get() {
-				return !!this.role?.allow_partner;
-			},
-			set(value) {
-				this.$resources.role.setValue.submit(
-					{
-						allow_partner: value,
 					},
 					{ onSuccess: this.$session.roles.reload },
 				);
@@ -306,58 +246,6 @@ export default {
 				this.$resources.role.setValue.submit(
 					{
 						allow_webhook_configuration: value,
-					},
-					{ onSuccess: this.$session.roles.reload },
-				);
-			},
-		},
-		allowDashboard: {
-			get() {
-				return !!this.role?.allow_dashboard;
-			},
-			set(value) {
-				this.$resources.role.setValue.submit(
-					{
-						allow_dashboard: value,
-					},
-					{ onSuccess: this.$session.roles.reload },
-				);
-			},
-		},
-		allowLeads: {
-			get() {
-				return !!this.role?.allow_leads;
-			},
-			set(value) {
-				this.$resources.role.setValue.submit(
-					{
-						allow_leads: value,
-					},
-					{ onSuccess: this.$session.roles.reload },
-				);
-			},
-		},
-		allowCustomer: {
-			get() {
-				return !!this.role?.allow_customer;
-			},
-			set(value) {
-				this.$resources.role.setValue.submit(
-					{
-						allow_customer: value,
-					},
-					{ onSuccess: this.$session.roles.reload },
-				);
-			},
-		},
-		allowContribution: {
-			get() {
-				return !!this.role?.allow_contribution;
-			},
-			set(value) {
-				this.$resources.role.setValue.submit(
-					{
-						allow_contribution: value,
 					},
 					{ onSuccess: this.$session.roles.reload },
 				);
