@@ -164,6 +164,11 @@ let router = createRouter({
 			component: () => import('./pages/NewServer.vue'),
 		},
 		{
+			name: 'Register Managed Server',
+			path: '/servers/register-managed',
+			component: () => import('./pages/RegisterManagedServer.vue'),
+		},
+		{
 			name: 'PartnerNewPayout',
 			path: '/payment-payout/New',
 			component: deferredPartnerPage,

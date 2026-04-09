@@ -5,6 +5,10 @@
 			<Dropdown
 				:options="[
 					{ label: 'Site', route: { name: 'New Site' } },
+					{
+						label: 'Managed Server',
+						route: { name: 'Register Managed Server' },
+					},
 					{ label: 'Benches', route: { name: 'New Release Group' } },
 				]"
 			>

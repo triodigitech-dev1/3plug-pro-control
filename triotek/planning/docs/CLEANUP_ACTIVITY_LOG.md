@@ -474,3 +474,16 @@ Reason:
 
 * the actual product is not “cleaned Press” by itself; it needs an operator-facing surface that reflects the single-server 3plug model
 * this starts turning the imported Press base into the real 3plug product instead of spending more cycles on lower-value leftover areas
+
+### 2026-04-09
+
+Change:
+
+* added a dedicated `Register Managed Server` dashboard page for the self-hosted one-server 3plug flow
+* wired home and quick-create entry points toward that focused registration path instead of only the older broad Press server-creation page
+* kept the flow grounded on the existing self-hosted Press API so server verification, record creation, and setup still use real product behavior
+
+Reason:
+
+* 3plug v1 needs an explicit one-server onboarding path, not just a cleaned dashboard shell around the old cloud-era `New Server` page
+* this makes the main product entry point match the actual deployment model we decided to build

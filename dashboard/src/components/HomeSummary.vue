@@ -15,7 +15,7 @@
 					</p>
 				</div>
 				<div class="flex flex-wrap gap-2">
-					<Button variant="solid" :route="{ name: 'New Server' }">
+					<Button variant="solid" :route="{ name: 'Register Managed Server' }">
 						Register server
 					</Button>
 					<Button :route="{ name: 'New Site' }">Create site</Button>
