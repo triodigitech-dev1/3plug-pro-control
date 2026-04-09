@@ -345,3 +345,16 @@ Reason:
 
 * this closes the public control-plane payment entry surface without forcing a risky invoice-doctype rewrite in the same pass
 * it keeps the cleanup careful while making the product boundary much clearer
+
+### 2026-04-09
+
+Change:
+
+* removed stale payment permission and doctype hook declarations from `hooks.py`
+* removed the leftover `allow_billing` role field from `Press Role` metadata, Python types, account permission reads, and role patch logic
+* removed clearly payment-only patch entries from `patches.txt` so new migrations stop advertising billing-era cleanup work
+
+Reason:
+
+* these were legacy declarations after the earlier payment shutdown passes and were now adding confusion rather than value
+* cleaning the model and patch metadata makes the control-plane boundary clearer before we move on to the forensic layer

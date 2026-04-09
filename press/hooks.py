@@ -109,10 +109,6 @@ permission_query_conditions = {
 	"Site Domain": ("press.press.doctype.site_domain.site_domain.get_permission_query_conditions"),
 	"TLS Certificate": "press.press.doctype.tls_certificate.tls_certificate.get_permission_query_conditions",
 	"Team": "press.press.doctype.team.team.get_permission_query_conditions",
-	"Subscription": ("press.press.doctype.subscription.subscription.get_permission_query_conditions"),
-	"Stripe Payment Method": "press.press.doctype.stripe_payment_method.stripe_payment_method.get_permission_query_conditions",
-	"Balance Transaction": "press.press.doctype.balance_transaction.balance_transaction.get_permission_query_conditions",
-	"Invoice": "press.press.doctype.invoice.invoice.get_permission_query_conditions",
 	"App Source": ("press.press.doctype.app_source.app_source.get_permission_query_conditions"),
 	"App Release": ("press.press.doctype.app_release.app_release.get_permission_query_conditions"),
 	"Release Group": "press.press.doctype.release_group.release_group.get_permission_query_conditions",
@@ -137,10 +133,6 @@ has_permission = {
 	"Site Domain": "press.overrides.has_permission",
 	"TLS Certificate": "press.overrides.has_permission",
 	"Team": "press.press.doctype.team.team.has_permission",
-	"Subscription": "press.overrides.has_permission",
-	"Stripe Payment Method": "press.overrides.has_permission",
-	"Balance Transaction": "press.overrides.has_permission",
-	"Invoice": "press.press.doctype.invoice.invoice.has_permission",
 	"App Source": "press.overrides.has_permission",
 	"App Release": "press.press.doctype.app_release.app_release.has_permission",
 	"Release Group": "press.overrides.has_permission",
@@ -166,19 +158,9 @@ has_permission = {
 # Hook on document methods and events
 
 doc_events = {
-	"Stripe Webhook Log": {
-		"after_insert": [
-			"press.press.doctype.invoice.stripe_webhook_handler.handle_stripe_webhook_events",
-			"press.press.doctype.team.team.process_stripe_webhook",
-		],
-	},
-	"Address": {"validate": "press.api.billing.validate_gst"},
 	"Site": {
 		"before_insert": "press.press.doctype.team.team.validate_site_creation",
 		"after_insert": "press.press.doctype.press_role.press_role.create_user_resource",
-	},
-	"Marketplace App Subscription": {
-		"on_update": "press.press.doctype.storage_integration_subscription.storage_integration_subscription.create_after_insert",
 	},
 	"Release Group": {
 		"after_insert": "press.press.doctype.press_role.press_role.create_user_resource",
@@ -402,18 +384,9 @@ scheduler_events = {
 	},
 }
 
-DEFERRED_PERMISSION_DOCTYPES = {
-	"Subscription",
-	"Stripe Payment Method",
-	"Balance Transaction",
-	"Invoice",
-}
+DEFERRED_PERMISSION_DOCTYPES = set()
 
-DEFERRED_DOC_EVENTS = {
-	"Stripe Webhook Log",
-	"Address",
-	"Marketplace App Subscription",
-}
+DEFERRED_DOC_EVENTS = set()
 
 DEFERRED_SCHEDULER_TARGETS = {
 	"press.press.doctype.marketplace_app.events.auto_review_for_missing_steps",

@@ -42,7 +42,6 @@ def migrate_group_permissions(team):
 		role = frappe.new_doc("Press Role")
 		role.title = group.title
 		role.team = team
-		role.enable_billing = 1
 		role.enable_apps = 1
 		for row in group.users:
 			role.append("users", {"user": row.user})

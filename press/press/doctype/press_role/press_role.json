@@ -11,7 +11,6 @@
   "team",
   "section_break_yvqq",
   "admin_access",
-  "allow_billing",
   "allow_apps",
   "all_servers",
   "all_sites",
@@ -71,13 +70,6 @@
   {
    "fieldname": "column_break_todb",
    "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "allow_billing",
-   "fieldtype": "Check",
-   "label": "Allow Billing",
-   "search_index": 1
   },
   {
    "default": "0",

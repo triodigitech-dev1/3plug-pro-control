@@ -1059,7 +1059,6 @@ def user_permissions():
 	PressRoleUser = frappe.qb.DocType("Press Role User")
 	permission_fields = [
 		"admin_access",
-		"allow_billing",
 		"allow_webhook_configuration",
 		"allow_apps",
 		"allow_partner",

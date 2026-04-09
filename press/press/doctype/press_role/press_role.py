@@ -35,7 +35,6 @@ class PressRole(Document):
 		all_sites: DF.Check
 		allow_apps: DF.Check
 		allow_bench_creation: DF.Check
-		allow_billing: DF.Check
 		allow_contribution: DF.Check
 		allow_customer: DF.Check
 		allow_dashboard: DF.Check
@@ -57,7 +56,6 @@ class PressRole(Document):
 		"all_release_groups",
 		"allow_apps",
 		"allow_bench_creation",
-		"allow_billing",
 		"allow_contribution",
 		"allow_customer",
 		"allow_dashboard",
@@ -109,7 +107,7 @@ class PressRole(Document):
 			frappe.throw(message, frappe.ValidationError)
 		self.append("users", user_dict)
 		self.save()
-		if self.admin_access or self.allow_billing:
+		if self.admin_access:
 			self.add_press_admin_role(user)
 
 	@dashboard_whitelist()
@@ -121,7 +119,7 @@ class PressRole(Document):
 			frappe.throw(message, frappe.ValidationError)
 		self.remove(users.pop())
 		self.save()
-		if self.admin_access or self.allow_billing:
+		if self.admin_access:
 			self.remove_press_admin_role(user)
 
 	@dashboard_whitelist()
