@@ -41,6 +41,7 @@ Low-risk first candidates:
 
 * `Subscription`
 * `Stripe Payment Method`
+* `Balance Transaction`
 * `Invoice`
 * `Stripe Webhook Log` doc event
 * `Address` billing validation event

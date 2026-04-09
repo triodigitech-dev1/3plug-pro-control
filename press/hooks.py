@@ -405,6 +405,7 @@ scheduler_events = {
 DEFERRED_PERMISSION_DOCTYPES = {
 	"Subscription",
 	"Stripe Payment Method",
+	"Balance Transaction",
 	"Invoice",
 }
 
