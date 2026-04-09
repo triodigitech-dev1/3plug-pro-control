@@ -18,11 +18,17 @@ This is an operator product that uses:
 
 One managed server first:
 
+* one 3plug deployment per managed server
 * one Linux server managed by Triotek
 * many benches on that server
 * many sites on those benches
 
 This is the first simplification of Press.
+
+This also creates the first security boundary:
+
+* one 3plug instance should manage its own server
+* one 3plug instance should not become a shared control plane for many unrelated customer servers in v1
 
 ## First managed records
 
@@ -75,6 +81,7 @@ Rules for v1:
 * move execution behind jobs instead of running long actions only in the foreground
 * keep app installation governed by approved app sources and stacks
 * do not adopt Press modules that are unrelated to the one-server v1 scope
+* keep the control plane scoped to its own managed server for isolation and simpler security
 
 ## Explicitly out of scope for v1
 

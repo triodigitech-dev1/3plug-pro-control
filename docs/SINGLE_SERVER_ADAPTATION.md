@@ -6,6 +6,7 @@ Press supports a broader hosting and infrastructure model.
 
 3plug should keep the Press architecture while narrowing the first product shape to Triotek's current real need:
 
+* one 3plug deployment per server
 * one managed server
 * many benches
 * many sites
@@ -30,6 +31,7 @@ Keep the Press resource mindset:
 
 Change the initial operating assumptions:
 
+* each 3plug deployment manages its own server
 * default to one active server record
 * treat benches as children of that server
 * treat sites as children of benches
@@ -63,4 +65,5 @@ Guardrails:
 * keep user actions flowing through jobs
 * keep the dashboard as the main operator surface
 * keep Bench as the execution layer for Bench-owned actions
+* do not turn one 3plug deployment into a shared multi-server control plane in v1
 * avoid building major new behavior first in the coordination repo
