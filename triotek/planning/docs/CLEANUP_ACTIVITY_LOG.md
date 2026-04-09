@@ -358,3 +358,16 @@ Reason:
 
 * these were legacy declarations after the earlier payment shutdown passes and were now adding confusion rather than value
 * cleaning the model and patch metadata makes the control-plane boundary clearer before we move on to the forensic layer
+
+### 2026-04-09
+
+Change:
+
+* removed payment doctypes from the client API allowlist in `press/api/client.py`
+* removed `Subscription` and `Invoice` shortcuts from the Press workspace and relabeled that section to `Plans`
+* updated the remaining account onboarding copy so it no longer points operators toward platform invoicing
+
+Reason:
+
+* these were still exposing payment-era objects and messages after the earlier cleanup passes
+* trimming the visible client surface makes the control-plane boundary much more consistent

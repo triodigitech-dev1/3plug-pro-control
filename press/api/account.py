@@ -924,14 +924,14 @@ def user_prompts():
 	if not doc.billing_address:
 		return [
 			"UpdateBillingDetails",
-			"Update your billing details so that we can show it in your monthly invoice.",
+			"Update your account details in the admin business site records.",
 		]
 
 	gstin, country = frappe.db.get_value("Address", doc.billing_address, ["gstin", "country"])
 	if country == "India" and not gstin:
 		return [
 			"UpdateBillingDetails",
-			"If you have a registered GSTIN number, you are required to update it, so that we can generate a GST Invoice.",
+			"If you have a registered GSTIN number, you should update it in your admin business site records.",
 		]
 	return None
 
