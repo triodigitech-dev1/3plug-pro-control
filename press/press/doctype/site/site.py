@@ -2635,26 +2635,9 @@ class Site(Document, TagHelpers):
 			# skip validation if site is on hybrid server
 			return
 
-		team = frappe.get_doc("Team", self.team)
-
-		if team.parent_team:
-			team = frappe.get_doc("Team", team.parent_team)
-
-		if team.payment_mode == "Paid By Partner" and team.billing_team:
-			team = frappe.get_doc("Team", team.billing_team)
-
-		# Allow plan change if user just authorized a Razorpay payment
-		if team.has_recent_pending_payment():
-			return
-
-		trial_plans = frappe.get_all("Site Plan", {"is_trial_plan": 1, "enabled": 1}, pluck="name")
-		has_valid_payment = team.default_payment_method or team.get_balance()
-
-		if (not has_valid_payment and self.plan in trial_plans) or not team.payment_mode:
-			frappe.throw(
-				"Cannot change plan because you have neither added a card nor have enough credit balance",
-				CannotChangePlan,
-			)  # nosemgrep
+		# 3plug-control treats plan changes as infrastructure operations.
+		# Commercial billing validation moves to the admin/business site.
+		return
 
 	# TODO: rename to change_plan and remove the need for ignore_card_setup param
 	@dashboard_whitelist()

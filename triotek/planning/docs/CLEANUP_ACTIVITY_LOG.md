@@ -284,3 +284,15 @@ Reason:
 
 * this completes the UI-level separation between infrastructure control and business billing
 * the control plane can now keep moving toward operations and forensic work without carrying payment-product assumptions
+
+### 2026-04-08
+
+Change:
+
+* removed payment-state blocking from core site and server plan-change validation
+* kept the deeper subscription engine untouched for now
+
+Reason:
+
+* this shifts plan changes toward operational control instead of checkout-style gating
+* keeping the subscription engine for a later pass reduces the risk of breaking unrelated lifecycle behavior

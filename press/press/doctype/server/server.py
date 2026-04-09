@@ -1331,13 +1331,7 @@ class BaseServer(Document, TagHelpers):
 		if team.parent_team:
 			team = frappe.get_doc("Team", team.parent_team)
 
-		if team.payment_mode == "Paid By Partner" and team.billing_team:
-			team = frappe.get_doc("Team", team.billing_team)
-
-		if not (team.default_payment_method or team.get_balance()):
-			frappe.throw(
-				"Cannot change plan: please add a card or prepaid credits to your billing account on Frappe Cloud."
-			)
+		# 3plug-control does not gate server plan changes on Press billing state.
 
 		cluster: Cluster = frappe.get_doc("Cluster", self.cluster)
 		instance_id = frappe.db.get_value("Virtual Machine", self.virtual_machine, "instance_id")
