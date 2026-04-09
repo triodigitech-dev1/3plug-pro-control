@@ -136,7 +136,7 @@ Reason:
 
 Commit:
 
-* pending
+* `ba517b4` `Trim deferred role permission UI`
 
 ### 2026-04-08
 
