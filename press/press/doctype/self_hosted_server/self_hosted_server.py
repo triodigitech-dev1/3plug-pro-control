@@ -129,6 +129,12 @@ class SelfHostedServer(Document):
 
 	@frappe.whitelist()
 	def fetch_apps_and_sites(self):
+		# Reset the current import snapshot so repeated discovery reflects the
+		# server's latest bench state instead of appending duplicate rows.
+		self.set("apps", [])
+		self.set("sites", [])
+		self.save()
+
 		frappe.enqueue_doc(self.doctype, self.name, "_get_apps", queue="long", timeout=1200)
 		frappe.enqueue_doc(self.doctype, self.name, "_get_sites", queue="long", timeout=1200)
 

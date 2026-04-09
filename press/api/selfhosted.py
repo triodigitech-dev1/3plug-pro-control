@@ -2,6 +2,7 @@ import time
 
 import frappe
 from dns.resolver import Resolver
+from frappe.utils import cint
 from frappe.utils import strip
 
 from press.api.server import plans
@@ -167,3 +168,102 @@ def create_and_verify_selfhosted(server):
 
 	frappe.throw("Server verification failed. Please check the server details and try again.")
 	return None
+
+
+def _get_self_hosted_server_for_managed_server(server: str):
+	frappe.get_doc("Server", server)
+	self_hosted_server_name = frappe.db.get_value("Self Hosted Server", {"server": server}, "name")
+	if not self_hosted_server_name:
+		frappe.throw("No linked self-hosted server record was found for this managed server")
+	return frappe.get_doc("Self Hosted Server", self_hosted_server_name)
+
+
+def _serialize_self_hosted_bench_state(self_hosted_server):
+	return {
+		"self_hosted_server": self_hosted_server.name,
+		"server": self_hosted_server.server,
+		"status": self_hosted_server.status,
+		"existing_bench_present": bool(self_hosted_server.existing_bench_present),
+		"bench_directory": self_hosted_server.bench_directory,
+		"release_group": self_hosted_server.release_group,
+		"app_count": len(self_hosted_server.apps or []),
+		"site_count": len(self_hosted_server.sites or []),
+		"apps": [
+			{
+				"app_name": row.app_name,
+				"branch": row.branch,
+				"version": row.version,
+			}
+			for row in self_hosted_server.apps or []
+		],
+		"sites": [
+			{
+				"site_name": row.site_name,
+				"apps": row.apps,
+				"site": row.site,
+			}
+			for row in self_hosted_server.sites or []
+		],
+		"can_discover": bool(
+			self_hosted_server.existing_bench_present and self_hosted_server.bench_directory
+		),
+		"can_create_release_group": bool(
+			self_hosted_server.existing_bench_present
+			and self_hosted_server.bench_directory
+			and self_hosted_server.apps
+			and not self_hosted_server.release_group
+		),
+		"can_create_sites": bool(self_hosted_server.release_group and self_hosted_server.sites),
+	}
+
+
+@frappe.whitelist()
+def get_bench_onboarding_state(server: str):
+	self_hosted_server = _get_self_hosted_server_for_managed_server(server)
+	return _serialize_self_hosted_bench_state(self_hosted_server)
+
+
+@frappe.whitelist()
+def update_existing_bench_configuration(
+	server: str, existing_bench_present: int | str = 0, bench_directory: str | None = None
+):
+	self_hosted_server = _get_self_hosted_server_for_managed_server(server)
+	self_hosted_server.existing_bench_present = cint(existing_bench_present)
+	self_hosted_server.bench_directory = strip(bench_directory or "") or None
+	if self_hosted_server.existing_bench_present and not self_hosted_server.bench_directory:
+		frappe.throw("Bench directory is required when importing an existing bench")
+	self_hosted_server.save()
+	return _serialize_self_hosted_bench_state(self_hosted_server)
+
+
+@frappe.whitelist()
+def discover_existing_bench(server: str, bench_directory: str):
+	self_hosted_server = _get_self_hosted_server_for_managed_server(server)
+	self_hosted_server.existing_bench_present = 1
+	self_hosted_server.bench_directory = strip(bench_directory or "")
+	if not self_hosted_server.bench_directory:
+		frappe.throw("Bench directory is required to inspect an existing bench")
+	self_hosted_server.save()
+	self_hosted_server.fetch_apps_and_sites()
+	self_hosted_server.reload()
+	state = _serialize_self_hosted_bench_state(self_hosted_server)
+	state["message"] = "Bench discovery has started. Refresh shortly to inspect discovered apps and sites."
+	return state
+
+
+@frappe.whitelist()
+def create_release_group_from_existing_bench(server: str):
+	self_hosted_server = _get_self_hosted_server_for_managed_server(server)
+	if not self_hosted_server.existing_bench_present:
+		frappe.throw("Enable existing-bench import before creating a managed bench")
+	if not self_hosted_server.bench_directory:
+		frappe.throw("Bench directory is required before creating a managed bench")
+	if not self_hosted_server.apps:
+		frappe.throw("Discover the existing bench apps before creating a managed bench")
+	if self_hosted_server.release_group:
+		return _serialize_self_hosted_bench_state(self_hosted_server)
+	self_hosted_server.create_new_rg()
+	self_hosted_server.reload()
+	state = _serialize_self_hosted_bench_state(self_hosted_server)
+	state["message"] = "Managed bench created from the discovered existing bench"
+	return state

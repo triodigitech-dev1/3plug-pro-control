@@ -499,3 +499,16 @@ Change:
 Reason:
 
 * the product should keep steering operators into the single-server 3plug flow we chose, instead of drifting back toward the older generic Press server-creation path
+
+### 2026-04-09
+
+Change:
+
+* added managed bench onboarding APIs on top of the existing self-hosted Press flow
+* added a `Bench Onboarding` server-detail tab for self-hosted servers so operators can configure an existing bench path, run discovery, and create the managed bench record from the dashboard
+* reset self-hosted bench discovery child tables before re-running import so repeated discovery reflects current server state instead of duplicating rows
+
+Reason:
+
+* 3plug needs the real server -> bench path working in the product UI, not just as Desk-only self-hosted actions
+* this keeps us building directly on Press's existing self-hosted behavior while making the operator flow usable inside the actual 3plug control plane

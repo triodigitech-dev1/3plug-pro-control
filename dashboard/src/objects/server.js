@@ -282,6 +282,21 @@ export default {
 				},
 			},
 			{
+				label: 'Bench Onboarding',
+				icon: icon('package-plus'),
+				condition: (server) => {
+					return server.doc?.status !== 'Archived' && server.doc?.is_self_hosted;
+				},
+				route: 'bench-onboarding',
+				type: 'Component',
+				component: defineAsyncComponent(
+					() => import('../components/server/ServerBenchOnboarding.vue'),
+				),
+				props: (server) => {
+					return { server: server.doc.name };
+				},
+			},
+			{
 				label: 'Bench Analytics',
 				icon: icon('bar-chart-2'),
 				condition: (server) => server.doc?.status !== 'Archived',
