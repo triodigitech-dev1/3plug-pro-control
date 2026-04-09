@@ -75,3 +75,7 @@ Use Press as the base.
 Do not keep building the main product in the old coordination repo.
 
 Build 3plug in `3plug-control` as a Press-derived product with a one-server-per-deployment security model first.
+
+See also:
+
+* `PRESS_KEEP_DEFER_MAP.md`
