@@ -110,6 +110,14 @@ const navigation = computed(() => {
 			disabled: enforce2FA,
 		},
 		{
+			name: 'Incident Signals',
+			icon: Activity,
+			route: '/forensics/signals',
+			isActive: routeName === 'Forensic Incident Signals',
+			condition: onboardingComplete && !isSaasUser,
+			disabled: enforce2FA,
+		},
+		{
 			name: 'Dev Tools',
 			icon: Code,
 			route: '/devtools',

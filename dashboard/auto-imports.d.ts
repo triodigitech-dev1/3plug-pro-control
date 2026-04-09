@@ -6,5 +6,18 @@
 // biome-ignore lint: disable
 export {}
 declare global {
-
+  const LucideActivity: typeof import('~icons/lucide/activity')['default']
+  const LucideAlertTriangle: typeof import('~icons/lucide/alert-triangle')['default']
+  const LucideArchive: typeof import('~icons/lucide/archive')['default']
+  const LucideArrowUpCircle: typeof import('~icons/lucide/arrow-up-circle')['default']
+  const LucideCode: typeof import('~icons/lucide/code')['default']
+  const LucideLock: typeof import('~icons/lucide/lock')['default']
+  const LucideRefreshCw: typeof import('~icons/lucide/refresh-cw')['default']
+  const LucideRocket: typeof import('~icons/lucide/rocket')['default']
+  const LucideShield: typeof import('~icons/lucide/shield')['default']
+  const LucideShieldCheck: typeof import('~icons/lucide/shield-check')['default']
+  const LucideTrendingUp: typeof import('~icons/lucide/trending-up')['default']
+  const LucideTriangleAlert: typeof import('~icons/lucide/triangle-alert')['default']
+  const LucideUser: typeof import('~icons/lucide/user')['default']
+  const LucideUsers: typeof import('~icons/lucide/users')['default']
 }

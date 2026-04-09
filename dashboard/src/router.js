@@ -298,6 +298,11 @@ let router = createRouter({
 			],
 		},
 		{
+			name: 'Forensic Incident Signals',
+			path: '/forensics/signals',
+			component: () => import('./pages/ForensicIncidentSignals.vue'),
+		},
+		{
 			name: 'Partnership',
 			path: '/partners',
 			redirect: { name: 'PartnerOverview' },

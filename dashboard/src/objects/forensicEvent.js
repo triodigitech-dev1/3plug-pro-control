@@ -31,6 +31,13 @@ export default {
 		moreActions({ listResource }) {
 			return [
 				{
+					label: 'View Incident Signals',
+					icon: 'activity',
+					onClick() {
+						window.location.assign('/dashboard/forensics/signals');
+					},
+				},
+				{
 					label: 'Export as CSV',
 					icon: 'download',
 					onClick() {

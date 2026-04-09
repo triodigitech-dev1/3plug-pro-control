@@ -99,6 +99,116 @@ def fetch_forensic_events_for_export(filters=None):
 	)
 
 
+@frappe.whitelist()
+def fetch_forensic_incident_signals(hours=72, min_occurrences=2, signal_state=None, peak_severity=None):
+	hours = max(int(hours or 72), 1)
+	min_occurrences = max(int(min_occurrences or 2), 1)
+	from_time = frappe.utils.add_to_date(frappe.utils.now_datetime(), hours=-hours, as_datetime=True)
+	fields = [
+		"name",
+		"creation",
+		"severity",
+		"event_type",
+		"status",
+		"document_type",
+		"document_name",
+		"source_doctype",
+		"source_name",
+		"team",
+		"actor",
+		"site",
+		"bench",
+		"server_type",
+		"server",
+		"job",
+		"summary",
+	]
+	events = frappe.get_all(
+		"Forensic Event",
+		filters={"creation": (">=", from_time)},
+		fields=fields,
+		order_by="creation desc",
+		limit_page_length=5000,
+	)
+
+	signals = {}
+	for event in events:
+		target_type = event.get("document_type") or event.get("source_doctype") or "Forensic Event"
+		target_name = event.get("document_name") or event.get("source_name") or event.get("name")
+		event_type = event.get("event_type") or "Unknown Event"
+		key = f"{target_type}::{target_name}::{event_type}"
+		signal = signals.setdefault(
+			key,
+			{
+				"name": key,
+				"signal_key": key,
+				"target_label": f"{target_type} {target_name}".strip(),
+				"document_type": target_type,
+				"document_name": target_name,
+				"event_type": event_type,
+				"team": event.get("team"),
+				"site": event.get("site"),
+				"bench": event.get("bench"),
+				"server_type": event.get("server_type"),
+				"server": event.get("server"),
+				"job": event.get("job"),
+				"count": 0,
+				"first_seen": event.get("creation"),
+				"last_seen": event.get("creation"),
+				"peak_severity": event.get("severity") or "Info",
+				"latest_severity": event.get("severity") or "Info",
+				"latest_status": event.get("status"),
+				"latest_summary": event.get("summary"),
+				"latest_event": event.get("name"),
+				"latest_actor": event.get("actor"),
+				"signal_state": "Watch",
+			},
+		)
+
+		signal["first_seen"] = min(signal["first_seen"], event.get("creation"))
+		signal["last_seen"] = max(signal["last_seen"], event.get("creation"))
+		if _severity_rank(event.get("severity")) > _severity_rank(signal["peak_severity"]):
+			signal["peak_severity"] = event.get("severity") or "Info"
+
+		if event.get("creation") >= signal["last_seen"]:
+			signal["latest_severity"] = event.get("severity") or "Info"
+			signal["latest_status"] = event.get("status")
+			signal["latest_summary"] = event.get("summary")
+			signal["latest_event"] = event.get("name")
+			signal["latest_actor"] = event.get("actor")
+			signal["team"] = signal["team"] or event.get("team")
+			signal["site"] = signal["site"] or event.get("site")
+			signal["bench"] = signal["bench"] or event.get("bench")
+			signal["server_type"] = signal["server_type"] or event.get("server_type")
+			signal["server"] = signal["server"] or event.get("server")
+			signal["job"] = signal["job"] or event.get("job")
+
+		if _is_signal_severity(event.get("severity")):
+			signal["count"] += 1
+
+	results = []
+	for signal in signals.values():
+		if signal["count"] < min_occurrences and signal["peak_severity"] != "Critical":
+			continue
+
+		signal["signal_state"] = _signal_state_for(signal["latest_severity"])
+		if signal_state and signal["signal_state"] != signal_state:
+			continue
+		if peak_severity and signal["peak_severity"] != peak_severity:
+			continue
+		results.append(signal)
+
+	results.sort(
+		key=lambda signal: (
+			_severity_rank(signal["peak_severity"]),
+			signal["count"],
+			signal["last_seen"],
+		),
+		reverse=True,
+	)
+	return results
+
+
 def capture_agent_job_insert(doc: "AgentJob", _method=None):
 	create_forensic_event(
 		event_type="Agent Job Created",
@@ -419,3 +529,26 @@ def _severity_for_security_update_check_status(status: str | None) -> str:
 		"Pending": "Info",
 		"Success": "Info",
 	}.get(status or "", "Info")
+
+
+def _severity_rank(severity: str | None) -> int:
+	return {
+		"Info": 0,
+		"Warning": 1,
+		"Error": 2,
+		"Critical": 3,
+	}.get(severity or "Info", 0)
+
+
+def _is_signal_severity(severity: str | None) -> bool:
+	return _severity_rank(severity) >= _severity_rank("Warning")
+
+
+def _signal_state_for(severity: str | None) -> str:
+	if severity == "Critical":
+		return "Open"
+	if severity == "Error":
+		return "Open"
+	if severity == "Warning":
+		return "Watch"
+	return "Recovered"

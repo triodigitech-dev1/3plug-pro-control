@@ -448,3 +448,16 @@ Reason:
 
 * investigations should move directly from evidence to the affected infrastructure record instead of forcing operators to search manually
 * this makes the forensic layer feel like an investigation hub rather than a passive event archive
+
+### 2026-04-09
+
+Change:
+
+* added grouped forensic incident signals on top of `Forensic Event` so repeated failures are summarized by target and event type
+* added a dedicated `Incident Signals` dashboard page, route, and sidebar entry for operator review
+* linked the raw forensic event list to the new signal view so operators can move between grouped signals and the underlying event stream
+
+Reason:
+
+* raw events are useful for evidence, but operators also need a quicker way to spot repeated failures without rebuilding the full old Press incident subsystem
+* this keeps 3plug focused on single-server operational value instead of spending more time on low-value leftover surfaces
