@@ -11,8 +11,8 @@
 					</h2>
 					<p class="mt-2 max-w-3xl text-sm text-gray-600">
 						This flow reuses Press's self-hosted import path. We discover the
-						bench on this managed server, map its apps, then create the managed
-						bench record that the rest of the product can operate on.
+						bench on this managed server, map its apps, and turn that runtime
+						into managed bench and site records the rest of 3plug can operate on.
 					</p>
 				</div>
 				<div class="space-y-2 text-sm text-gray-600">
@@ -32,6 +32,38 @@
 
 		<div class="grid gap-5 xl:grid-cols-[minmax(0,1.25fr)_22rem]">
 			<div class="space-y-5">
+				<section class="rounded-md border bg-white p-5">
+					<div class="flex items-center justify-between gap-4">
+						<div>
+							<h3 class="text-lg font-semibold text-gray-900">Onboarding Progress</h3>
+							<p class="mt-1 text-sm text-gray-600">
+								Keep the core server to bench to site steps visible while this
+								managed server is being brought under 3plug control.
+							</p>
+						</div>
+						<Badge :label="nextActionLabel" />
+					</div>
+					<div class="mt-4 grid gap-3 md:grid-cols-2">
+						<div
+							v-for="stage in onboardingStages"
+							:key="stage.label"
+							class="rounded-md border px-4 py-3"
+						>
+							<div class="flex items-center justify-between gap-3">
+								<div class="font-medium text-gray-900">{{ stage.label }}</div>
+								<Badge :label="stage.status" />
+							</div>
+							<div class="mt-1 text-sm text-gray-600">
+								{{ stage.helper }}
+							</div>
+						</div>
+					</div>
+					<div class="mt-4 rounded-md bg-gray-50 px-4 py-3 text-sm text-gray-700">
+						<span class="font-medium text-gray-900">Next recommended action:</span>
+						{{ nextActionDescription }}
+					</div>
+				</section>
+
 				<section class="rounded-md border bg-white p-5">
 					<h3 class="text-lg font-semibold text-gray-900">Existing Bench Source</h3>
 					<p class="mt-2 text-sm text-gray-600">
@@ -181,9 +213,9 @@
 							</p>
 						</div>
 						<Button
+							v-if="latestPlay"
 							variant="ghost"
 							:route="{ name: 'Server Play', params: { id: latestPlay.name } }"
-							v-if="latestPlay"
 						>
 							Open Latest Play
 						</Button>
@@ -267,7 +299,7 @@
 								<Badge :label="play.status || 'Unknown'" />
 							</div>
 							<div class="mt-1 text-xs text-gray-500">
-								{{ play.server }} · {{ formatTimestamp(play.creation) }}
+								{{ play.server }} | {{ formatTimestamp(play.creation) }}
 							</div>
 						</RouterLink>
 					</div>
@@ -397,6 +429,74 @@ export default {
 		},
 		latestPlay() {
 			return this.state.recent_plays?.[0] || null;
+		},
+		hasImportedSites() {
+			return Boolean(this.state.sites?.some((site) => site.site));
+		},
+		importedSiteCount() {
+			return (this.state.sites || []).filter((site) => site.site).length;
+		},
+		onboardingStages() {
+			return [
+				{
+					label: 'Bench Source',
+					status: this.state.existing_bench_present ? 'Configured' : 'Pending',
+					helper: this.state.bench_directory || 'Add the real bench path on the managed server.',
+				},
+				{
+					label: 'Discovery',
+					status: this.state.app_count || this.state.site_count ? 'Captured' : 'Pending',
+					helper: `${this.state.app_count || 0} apps and ${this.state.site_count || 0} sites discovered.`,
+				},
+				{
+					label: 'Managed Bench',
+					status: this.state.release_group ? 'Created' : 'Pending',
+					helper: this.state.release_group || 'Create the managed bench record from discovered apps.',
+				},
+				{
+					label: 'Managed Sites',
+					status: this.hasImportedSites ? 'Created' : 'Pending',
+					helper: this.hasImportedSites
+						? `${this.importedSiteCount} managed site records linked.`
+						: 'Create managed site records from the discovered bench sites.',
+				},
+			];
+		},
+		nextActionLabel() {
+			if (!this.state.existing_bench_present || !this.state.bench_directory) {
+				return 'Configure Source';
+			}
+			if (!this.state.app_count && !this.state.site_count) {
+				return 'Run Discovery';
+			}
+			if (!this.state.release_group) {
+				return 'Create Managed Bench';
+			}
+			if (!this.hasImportedSites) {
+				return 'Create Managed Sites';
+			}
+			if (this.state.can_restore_files) {
+				return 'Restore Site Files';
+			}
+			return 'Managed Flow Active';
+		},
+		nextActionDescription() {
+			if (!this.state.existing_bench_present || !this.state.bench_directory) {
+				return 'Enable existing bench import and save the real bench directory first.';
+			}
+			if (!this.state.app_count && !this.state.site_count) {
+				return 'Run discovery so 3plug captures the actual apps and sites from the server.';
+			}
+			if (!this.state.release_group) {
+				return 'Create the managed bench so the discovered runtime becomes a first-class 3plug bench.';
+			}
+			if (!this.hasImportedSites) {
+				return 'Create the managed site records so the server, bench, and site spine is complete.';
+			}
+			if (this.state.can_restore_files) {
+				return 'Start site file restoration and watch the related plays for progress.';
+			}
+			return 'The core managed import path is in place. Move into normal site and bench operations next.';
 		},
 	},
 	methods: {
