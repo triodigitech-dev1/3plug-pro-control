@@ -99,6 +99,17 @@ const navigation = computed(() => {
 			disabled: enforce2FA,
 		},
 		{
+			name: 'Forensics',
+			icon: FileSearch,
+			route: '/forensics',
+			isActive:
+				routeName === 'Forensic Event List' ||
+				routeName === 'Forensic Event Detail' ||
+				routeName.startsWith('Forensic Event Detail'),
+			condition: onboardingComplete && !isSaasUser,
+			disabled: enforce2FA,
+		},
+		{
 			name: 'Dev Tools',
 			icon: Code,
 			route: '/devtools',

@@ -10,6 +10,7 @@ import {
 	sitesTabRoute,
 	siteTabFilterControls
 } from './common';
+import { getForensicTab } from './common/forensics';
 import { getAppsTab } from './common/apps';
 import { getJobsTab } from './common/jobs';
 import type {
@@ -82,6 +83,9 @@ function getTabs() {
 		getSitesTab(),
 		getAppsTab(false),
 		getJobsTab('Bench'),
+		getForensicTab(r => ({
+			bench: r.doc?.name
+		})),
 		getProcessesTab(),
 		getLogsTab(false),
 		getPatchesTab(true)

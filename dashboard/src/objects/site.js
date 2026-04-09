@@ -22,6 +22,7 @@ import { getDocResource } from '../utils/resource';
 import { trialDays } from '../utils/site';
 import { clusterOptions, getUpsellBanner } from './common';
 import { getAppsTab } from './common/apps';
+import { getForensicTab } from './common/forensics';
 import { isMobile } from '../utils/device';
 import { getQueryParam, setQueryParam } from '../utils/index';
 
@@ -1660,6 +1661,9 @@ export default {
 					},
 				},
 			},
+			getForensicTab((site) => {
+				return { site: site.doc?.name };
+			}),
 		],
 		actions(context) {
 			let { documentResource: site } = context;

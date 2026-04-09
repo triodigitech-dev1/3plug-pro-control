@@ -66,6 +66,36 @@ def create_forensic_event(**kwargs):
 	return frappe.get_doc({"doctype": "Forensic Event", **kwargs}).insert(ignore_permissions=True)
 
 
+@frappe.whitelist()
+def fetch_forensic_events_for_export(filters=None):
+	filters = frappe.parse_json(filters) or {}
+	fields = [
+		"name",
+		"creation",
+		"severity",
+		"event_type",
+		"status",
+		"document_type",
+		"document_name",
+		"team",
+		"actor",
+		"site",
+		"bench",
+		"server_type",
+		"server",
+		"job",
+		"summary",
+		"payload",
+	]
+	return frappe.get_all(
+		"Forensic Event",
+		filters=filters,
+		fields=fields,
+		order_by="creation desc",
+		limit_page_length=5000,
+	)
+
+
 def capture_agent_job_insert(doc: "AgentJob", _method=None):
 	create_forensic_event(
 		event_type="Agent Job Created",

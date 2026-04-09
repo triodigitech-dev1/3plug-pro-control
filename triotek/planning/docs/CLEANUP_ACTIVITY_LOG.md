@@ -410,3 +410,16 @@ Reason:
 
 * this turns the post-cleanup plan into real product behavior instead of more planning-only work
 * it gives 3plug-control an initial searchable evidence trail for operator and system actions
+
+### 2026-04-09
+
+Change:
+
+* added a second forensic-layer slice in the dashboard with a dedicated `Forensic Event` object, detail route, sidebar entry, and reusable forensic list helpers
+* added contextual forensic tabs to `Site`, `Server`, and `Bench` detail pages so investigations can start from the affected infrastructure record
+* added a forensic CSV export helper in the doctype backend for incident review and reporting
+
+Reason:
+
+* the first slice captured evidence, but operators still needed a practical way to browse and export it
+* this makes forensic records usable in the normal 3plug workflow instead of leaving them as backend-only artifacts

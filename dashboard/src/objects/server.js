@@ -9,6 +9,7 @@ import { isMobile } from '../utils/device';
 import { date, duration, planTitle, userCurrency } from '../utils/format';
 import { getQueryParam, setQueryParam } from '../utils/index';
 import { trialDays } from '../utils/site';
+import { getForensicTab } from './common/forensics';
 import { getJobsTab } from './common/jobs';
 import { tagTab } from './common/tags';
 
@@ -1043,6 +1044,11 @@ export default {
 					},
 				},
 			},
+			getForensicTab((server) => {
+				return {
+					server: server.doc?.name,
+				};
+			}),
 		],
 	},
 	routes: [
