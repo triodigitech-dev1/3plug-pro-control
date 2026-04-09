@@ -82,6 +82,15 @@ Rules for v1:
 * keep app installation governed by approved app sources and stacks
 * do not adopt Press modules that are unrelated to the one-server v1 scope
 * keep the control plane scoped to its own managed server for isolation and simpler security
+* treat forensic reporting and logging as the first implementation task after cleanup
+
+## Environment note
+
+Current operating assumption:
+
+* Docker is available on the target server and is not currently a special blocker to watch for
+
+This means Docker should remain part of the environment baseline, but it is not the primary cleanup or risk focus right now.
 
 ## Explicitly out of scope for v1
 

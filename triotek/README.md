@@ -13,3 +13,4 @@ Important references:
 * `planning/docs/FIRST_CLEANUP_PASS.md`
 * `planning/docs/CLEANUP_ACTIVITY_LOG.md`
 * `planning/docs/HOOK_CLASSIFICATION.md`
+* `planning/docs/FORENSIC_LAYER_PLAN.md`

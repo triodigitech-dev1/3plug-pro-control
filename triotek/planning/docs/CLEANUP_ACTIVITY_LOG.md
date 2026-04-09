@@ -120,3 +120,15 @@ Reason:
 Commit:
 
 * `7121b67` `Reduce deferred profile and billing prompts`
+
+### 2026-04-08
+
+Decision noted:
+
+* Docker is not currently a special blocker on the target server
+* forensic reporting and logging should be the first implementation task after cleanup
+
+Reason:
+
+* environment attention should stay on actual current risks
+* 3plug needs strong traceability once cleanup is complete

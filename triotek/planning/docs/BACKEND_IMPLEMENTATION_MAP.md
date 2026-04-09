@@ -147,3 +147,9 @@ Rules:
 ## Immediate next implementation step
 
 After this map, the next coding step should be to define the first actual backend model skeletons in the repo using this record set and relationship tree.
+
+## Post-cleanup priority
+
+Before broader product expansion, the first implementation task after cleanup should be the forensic layer described in:
+
+* `FORENSIC_LAYER_PLAN.md`
