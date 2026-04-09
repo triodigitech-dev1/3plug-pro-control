@@ -161,3 +161,15 @@ Reason:
 
 * this trims more deferred runtime surface without forcing a deeper partner-module deletion pass yet
 * the partner settings card had already been detached from the live profile page, so removing the orphaned component was low risk
+
+### 2026-04-08
+
+Change:
+
+* replaced the root billing, partner, and partner-admin dashboard pages with simple deferred notices
+* removed their old tab-shell logic while keeping the route tree intact
+
+Reason:
+
+* this trims more imported Press UI logic from reachable route roots without forcing immediate deletion of deeper child pages
+* it keeps cleanup low risk while making the deferred scope more obvious inside the codebase
