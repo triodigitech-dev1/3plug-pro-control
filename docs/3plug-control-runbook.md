@@ -398,10 +398,14 @@ and confirm the path you want is under `/home/frappe/.local/bin/uv`.
 
 ### 12d. Install Python for Bench
 
+This stack currently supports Python 3.10, 3.11, and 3.12. Do not use Python 3.14 for the first setup run because dependency builds such as `greenlet` can fail during `bench get-app`.
+
 ```bash
-uv python install 3.14 --default
+uv python install 3.11 --default
 python3 --version
 ```
+
+If you already created a bench with Python 3.14 and `bench get-app /opt/triotek/control` failed with a `greenlet` build error, remove that failed bench and recreate it with Python 3.11 before continuing.
 
 ### 12e. Install Bench from the user-owned fork of Triotek Bench
 
