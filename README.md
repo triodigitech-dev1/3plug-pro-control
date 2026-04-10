@@ -184,7 +184,68 @@ If you want to harden SSH further, the Press base already contains hardening-ori
 * `press/playbooks/ufw.yml`
 * `press/playbooks/roles/sshd_hardening/*`
 
-### 4. Set up the bench that will host 3plug itself
+### 4. Prepare the working user for source control
+
+Before Bench setup, get the `frappe` working user ready for git, GitHub SSH, and forks.
+
+Switch into the working user:
+
+```bash
+sudo su - frappe
+cd /opt/triotek
+```
+
+Configure git identity:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
+git config --global init.defaultBranch main
+git config --global pull.rebase false
+git config --global core.editor nano
+git config --global --list
+```
+
+Create the GitHub SSH key for this working user:
+
+```bash
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+ssh-keygen -t ed25519 -C "your-email@example.com"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+cat ~/.ssh/id_ed25519.pub
+```
+
+Then do these GitHub-side actions with the same account that should own later changes:
+
+1. Open `GitHub -> Settings -> SSH and GPG keys`
+2. Click `New SSH key`
+3. Paste the output of `cat ~/.ssh/id_ed25519.pub`
+4. Save it with a title such as `3plug-control-server`
+
+Test SSH from the server:
+
+```bash
+ssh -T git@github.com
+```
+
+Fork these repositories into the GitHub account that should own later changes:
+
+* `Triotek-Ltd/triotek-bench`
+* `Triotek-Ltd/3plug-pro-control`
+
+You can do that either from the GitHub web UI using the `Fork` button, or with GitHub CLI if `gh` is installed:
+
+```bash
+gh auth login -h github.com -p ssh -w
+gh repo fork Triotek-Ltd/triotek-bench --clone=false --remote=false
+gh repo fork Triotek-Ltd/3plug-pro-control --clone=false --remote=false
+```
+
+Replace `YOUR_GITHUB_USER` below with the GitHub account or org that owns those forks.
+
+### 5. Set up the bench that will host 3plug itself
 
 This is the bench that will run the actual control panel.
 
@@ -262,61 +323,6 @@ wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-2/wkhtmlt
 sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb || sudo apt-get -f install -y
 wkhtmltopdf --version
 ```
-
-Then switch into the working user:
-
-```bash
-sudo su - frappe
-cd /opt/triotek
-```
-
-Before cloning anything, configure git and SSH for the real working user.
-
-As the `frappe` user:
-
-```bash
-mkdir -p ~/.ssh
-chmod 700 ~/.ssh
-
-git config --global user.name "Your Name"
-git config --global user.email "your-email@example.com"
-git config --global init.defaultBranch main
-git config --global pull.rebase false
-git config --global core.editor nano
-
-ssh-keygen -t ed25519 -C "your-email@example.com"
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
-cat ~/.ssh/id_ed25519.pub
-```
-
-Then do these GitHub-side actions with the same account that should own later changes:
-
-1. Open `GitHub -> Settings -> SSH and GPG keys`
-2. Click `New SSH key`
-3. Paste the output of `cat ~/.ssh/id_ed25519.pub`
-4. Save it with a title such as `3plug-control-server`
-
-Then test SSH from the server:
-
-```bash
-ssh -T git@github.com
-```
-
-Fork these repositories into the GitHub account that should own later changes:
-
-* `Triotek-Ltd/triotek-bench`
-* `Triotek-Ltd/3plug-pro-control`
-
-You can do that either from the GitHub web UI using the `Fork` button, or with GitHub CLI if `gh` is installed:
-
-```bash
-gh auth login -h github.com -p ssh -w
-gh repo fork Triotek-Ltd/triotek-bench --clone=false --remote=false
-gh repo fork Triotek-Ltd/3plug-pro-control --clone=false --remote=false
-```
-
-Replace `YOUR_GITHUB_USER` below with the GitHub account or org that owns those forks.
 
 Then run the user-level Bench setup with the Triotek-controlled Bench source over SSH, not the community one:
 

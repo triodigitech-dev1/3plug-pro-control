@@ -109,9 +109,70 @@ sudo grep -E "^(Port|PermitRootLogin|PasswordAuthentication|PubkeyAuthentication
 
 The GitHub SSH key for the `frappe` working user is created later in Phase 3 during git setup. This Phase 2 step is only for securing SSH access to the server itself.
 
-## Phase 3: Prepare the Frappe bench host
+## Phase 3: Prepare the working user for source control
 
-### 7. Install system packages for Bench as the sudo-capable admin user
+### 7. Switch into the frappe user
+
+```bash
+sudo su - frappe
+cd /opt/triotek
+```
+
+### 8. Configure git identity for the working user
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
+git config --global init.defaultBranch main
+git config --global pull.rebase false
+git config --global core.editor nano
+git config --global --list
+```
+
+### 9. Create the GitHub SSH key for the working user
+
+```bash
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+ssh-keygen -t ed25519 -C "your-email@example.com"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+cat ~/.ssh/id_ed25519.pub
+```
+
+Add that public key to the GitHub account that owns your forks:
+
+1. Open `GitHub -> Settings -> SSH and GPG keys`
+2. Click `New SSH key`
+3. Paste the output of `cat ~/.ssh/id_ed25519.pub`
+4. Save it with a title such as `3plug-control-server`
+
+Quick SSH check from the server:
+
+```bash
+ssh -T git@github.com
+```
+
+### 10. Fork the repos that the working user will use
+
+Fork these repositories into the actual GitHub account you want to publish from:
+
+* `Triotek-Ltd/triotek-bench`
+* `Triotek-Ltd/3plug-pro-control`
+
+You can fork them from the GitHub web UI with the `Fork` button, or with GitHub CLI if `gh` is installed:
+
+```bash
+gh auth login -h github.com -p ssh -w
+gh repo fork Triotek-Ltd/triotek-bench --clone=false --remote=false
+gh repo fork Triotek-Ltd/3plug-pro-control --clone=false --remote=false
+```
+
+For the commands below, replace `YOUR_GITHUB_USER` with that account or org name.
+
+## Phase 4: Prepare the Frappe bench host
+
+### 11. Install system packages for Bench as the sudo-capable admin user
 
 Use the current Bench setup path for Debian / Ubuntu. The official references are:
 
@@ -130,7 +191,7 @@ sudo systemctl status mariadb --no-pager
 sudo systemctl status redis-server --no-pager
 ```
 
-### 7a. Harden and verify MariaDB before Bench
+### 11a. Harden and verify MariaDB before Bench
 
 Run the hardening wizard:
 
@@ -179,7 +240,7 @@ sudo mariadb -e "SHOW VARIABLES LIKE 'collation_server';"
 sudo systemctl status mariadb --no-pager
 ```
 
-### 7b. Install wkhtmltopdf with patched Qt
+### 11b. Install wkhtmltopdf with patched Qt
 
 ```bash
 cd /tmp
@@ -188,78 +249,7 @@ sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb || sudo apt-get -f install -y
 wkhtmltopdf --version
 ```
 
-### 8. Switch into the frappe user for bench and app work
-
-After the admin-only package installation is done, switch into the working user:
-
-```bash
-sudo su - frappe
-cd /opt/triotek
-```
-
-### 9. Set up git and SSH for the working user
-
-Use SSH remotes, not HTTPS remotes, for the actual working copy.
-
-Also use your own forked repositories so the real git user on the server can publish changes under their own account.
-
-Create the SSH directory and configure git identity first:
-
-```bash
-mkdir -p ~/.ssh
-chmod 700 ~/.ssh
-
-git config --global user.name "Your Name"
-git config --global user.email "your-email@example.com"
-git config --global init.defaultBranch main
-git config --global pull.rebase false
-git config --global core.editor nano
-```
-
-Check it:
-
-```bash
-git config --global --list
-```
-
-Generate an SSH key if the `frappe` user does not already have one:
-
-```bash
-ssh-keygen -t ed25519 -C "your-email@example.com"
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
-cat ~/.ssh/id_ed25519.pub
-```
-
-Add that public key to the GitHub account that owns your forks:
-
-1. Open `GitHub -> Settings -> SSH and GPG keys`
-2. Click `New SSH key`
-3. Paste the output of `cat ~/.ssh/id_ed25519.pub`
-4. Save it with a title such as `3plug-control-server`
-
-Quick SSH check from the server:
-
-```bash
-ssh -T git@github.com
-```
-
-Fork these repositories into the actual GitHub account you want to publish from:
-
-* `Triotek-Ltd/triotek-bench`
-* `Triotek-Ltd/3plug-pro-control`
-
-You can fork them from the GitHub web UI with the `Fork` button, or with GitHub CLI if `gh` is installed:
-
-```bash
-gh auth login -h github.com -p ssh -w
-gh repo fork Triotek-Ltd/triotek-bench --clone=false --remote=false
-gh repo fork Triotek-Ltd/3plug-pro-control --clone=false --remote=false
-```
-
-For the commands below, replace `YOUR_GITHUB_USER` with that account or org name.
-
-### 10. Install Bench as the frappe user
+### 12. Install Bench as the frappe user
 
 Install Node, Yarn, uv, Python, and the Triotek-controlled Bench as the `frappe` user.
 
@@ -294,7 +284,7 @@ cd /opt/frappe/frappe-bench
 bench --version
 ```
 
-### 11. Clone the 3plug product from your fork
+### 13. Clone the 3plug product from your fork
 
 ```bash
 cd /opt/triotek
@@ -311,14 +301,14 @@ git remote add upstream git@github.com:Triotek-Ltd/3plug-pro-control.git
 git remote -v
 ```
 
-### 12. Add the app into the bench
+### 14. Add the app into the bench
 
 ```bash
 cd /opt/frappe/frappe-bench
 bench get-app /opt/triotek/control
 ```
 
-### 13. Create the real control-panel site
+### 15. Create the real control-panel site
 
 ```bash
 cd /opt/frappe/frappe-bench
@@ -328,9 +318,9 @@ bench --site 3plug.yourdomain.com install-app press
 
 That site is the actual 3plug control panel.
 
-## Phase 4: Bring up the control panel
+## Phase 5: Bring up the control panel
 
-### 14. Start it in foreground first
+### 16. Start it in foreground first
 
 ```bash
 cd /opt/frappe/frappe-bench
@@ -339,7 +329,7 @@ bench start
 
 This is the easiest first run because you can see immediate errors.
 
-### 15. Verify the site responds
+### 17. Verify the site responds
 
 Open the site locally or from the browser once reachable.
 
@@ -349,9 +339,9 @@ If needed:
 curl -I http://127.0.0.1
 ```
 
-## Phase 5: Enable HTTPS
+## Phase 6: Enable HTTPS
 
-### 16. Point DNS first
+### 18. Point DNS first
 
 Make sure `3plug.yourdomain.com` resolves to the server's public IP.
 
@@ -361,7 +351,7 @@ Check:
 dig +short 3plug.yourdomain.com
 ```
 
-### 17. Issue the certificate
+### 19. Issue the certificate
 
 ```bash
 sudo certbot --nginx -d 3plug.yourdomain.com
@@ -370,9 +360,9 @@ sudo certbot renew --dry-run
 
 Now the browser should stop showing the dangerous-site warning.
 
-## Phase 6: First login and product readiness
+## Phase 7: First login and product readiness
 
-### 18. Log in
+### 20. Log in
 
 Open:
 
@@ -386,15 +376,15 @@ Then:
 * confirm the dashboard loads
 * confirm the operator team exists and has self-hosted server access enabled
 
-### 19. Confirm the SSH key is available
+### 21. Confirm the SSH key is available
 
 The managed-server flow depends on the default SSH key being available.
 
 Inside the product, open the `Register Managed Server` flow and confirm it shows a default SSH public key.
 
-## Phase 7: Register the first managed server
+## Phase 8: Register the first managed server
 
-### 20. Use the same server as the first managed server
+### 22. Use the same server as the first managed server
 
 For the first MVP run, use the same Linux machine hosting the control panel.
 
@@ -413,7 +403,7 @@ Enter:
 
 For the first same-server test, if app and db are on the same machine, use the same IP values for both roles.
 
-### 21. Submit registration
+### 23. Submit registration
 
 After submit, confirm:
 
@@ -422,15 +412,15 @@ After submit, confirm:
 * setup begins
 * plays are visible
 
-## Phase 8: Onboard the bench
+## Phase 9: Onboard the bench
 
-### 22. Open bench onboarding
+### 24. Open bench onboarding
 
 From the managed server:
 
 * open `Bench Onboarding`
 
-### 23. Configure the real bench path
+### 25. Configure the real bench path
 
 If the bench already exists on the server, enable existing bench import and use the real path, for example:
 
@@ -438,7 +428,7 @@ If the bench already exists on the server, enable existing bench import and use 
 /home/frappe/frappe-bench
 ```
 
-### 24. Run the onboarding flow
+### 26. Run the onboarding flow
 
 In order:
 
@@ -448,7 +438,7 @@ In order:
 4. create managed sites
 5. restore site files if needed
 
-### 25. Watch the execution state
+### 27. Watch the execution state
 
 The current onboarding page should now show:
 
@@ -459,7 +449,7 @@ The current onboarding page should now show:
 
 Use those views as the primary evidence during the first MVP test.
 
-## Phase 9: First MVP feedback checklist
+## Phase 10: First MVP feedback checklist
 
 When you run the first live test, note these exact things:
 
