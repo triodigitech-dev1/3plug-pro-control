@@ -323,12 +323,37 @@ sudo systemctl status mariadb --no-pager
 
 Install wkhtmltopdf with patched Qt:
 
+Use the package that matches your Ubuntu base when it exists:
+
+* Ubuntu 24.04 (`noble`): use the older supported Ubuntu LTS package `jammy`
+* Ubuntu 22.04 (`jammy`): use `jammy`
+* Ubuntu 20.04 (`focal`): use `focal`
+
+Check your release first:
+
+```bash
+lsb_release -a
+```
+
+For Ubuntu 24.04 (`noble`), use:
+
 ```bash
 
 cd /tmp
 wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
 ls -lh wkhtmltox_0.12.6.1-2.jammy_amd64.deb
 sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb || sudo apt-get -f install -y
+sudo apt-get -f install -y
+wkhtmltopdf --version
+```
+
+For Ubuntu 20.04 (`focal`), use:
+
+```bash
+cd /tmp
+wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb
+ls -lh wkhtmltox_0.12.6-1.focal_amd64.deb
+sudo dpkg -i wkhtmltox_0.12.6-1.focal_amd64.deb || sudo apt-get -f install -y
 sudo apt-get -f install -y
 wkhtmltopdf --version
 ```
