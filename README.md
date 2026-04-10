@@ -502,6 +502,11 @@ Then return to the `frappe` user and continue:
 cd /opt/triotek
 pwd
 bench init frappe-bench
+```
+
+After `bench init` finishes successfully, verify the new bench directory:
+
+```bash
 cd /opt/triotek/frappe-bench
 pwd
 bench --version
