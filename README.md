@@ -326,8 +326,10 @@ Install wkhtmltopdf with patched Qt:
 ```bash
 
 cd /tmp
-wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+ls -lh wkhtmltox_0.12.6.1-2.jammy_amd64.deb
 sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb || sudo apt-get -f install -y
+sudo apt-get -f install -y
 wkhtmltopdf --version
 ```
 
