@@ -158,12 +158,12 @@ Set or confirm these values:
 ```text
 PermitRootLogin no
 PubkeyAuthentication yes
-PasswordAuthentication no
+PasswordAuthentication yes
 ```
 
 Important:
 
-* only set `PasswordAuthentication no` after you have confirmed key-based SSH works for your admin user
+* keep `PasswordAuthentication yes` for now if your admin user has not yet confirmed key-based SSH access to this server
 * keep your current SSH session open while testing a second session
 * if you use a custom SSH port, set it here before restarting SSH
 
@@ -174,6 +174,14 @@ sudo systemctl restart ssh
 sudo systemctl status ssh --no-pager
 sudo grep -E "^(Port|PermitRootLogin|PasswordAuthentication|PubkeyAuthentication)" /etc/ssh/sshd_config
 ```
+
+After you have confirmed that your admin user can log in to the server with SSH keys, come back and change:
+
+```text
+PasswordAuthentication no
+```
+
+Then restart SSH again and verify from a second SSH session before closing the first one.
 
 The GitHub SSH key for the `frappe` working user comes later in the git setup section. This hardening step is only for securing server access itself.
 
