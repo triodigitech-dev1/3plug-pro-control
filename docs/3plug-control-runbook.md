@@ -95,14 +95,55 @@ sudo systemctl status ssh
 
 ### 7. Install Bench using the normal Frappe path
 
-Follow the official Bench host prerequisites first:
+Use the current Bench setup path for Debian / Ubuntu. The official references are:
 
+* https://docs.frappe.io/framework/user/en/installation
 * https://docs.frappe.io/framework/user/en/tutorial/install-and-setup-bench
 
-After that, confirm Bench is available:
+Install the Bench prerequisites:
+
+```bash
+sudo apt update
+sudo apt install -y git redis-server libmariadb-dev mariadb-server mariadb-client pkg-config xvfb libfontconfig cron
+sudo mariadb-secure-installation
+```
+
+Install wkhtmltopdf with patched Qt:
+
+```bash
+cd /tmp
+wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb || sudo apt-get -f install -y
+```
+
+Install Node, Yarn, uv, Python, and Bench as the `frappe` user:
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+source ~/.bashrc
+nvm install 24
+npm install -g yarn
+
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.bashrc
+uv python install 3.14 --default
+uv tool install frappe-bench
+```
+
+Confirm Bench is available:
 
 ```bash
 bench --version
+```
+
+Create the bench itself:
+
+```bash
+cd /opt
+mkdir -p frappe
+cd /opt/frappe
+bench init frappe-bench
+cd /opt/frappe/frappe-bench
 ```
 
 ### 8. Clone the 3plug product
