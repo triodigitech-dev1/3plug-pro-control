@@ -55,6 +55,7 @@ See:
 * [V1 product scope](./triotek/planning/docs/V1_PRODUCT.md)
 * [Single-server adaptation](./triotek/planning/docs/SINGLE_SERVER_ADAPTATION.md)
 * [Cleanup and transition log](./triotek/planning/docs/CLEANUP_ACTIVITY_LOG.md)
+* [Control-panel runbook](./docs/3plug-control-runbook.md)
 
 ## Same-server control panel setup
 
@@ -68,6 +69,10 @@ This is the actual deployment shape we are aiming for first:
 So you are not installing a separate Press and then a separate 3plug.
 
 You are using this repo as your Press-derived product and installing its `press` app into the bench that will host the real 3plug control panel.
+
+If you want the step-by-step operator checklist version of this setup, use:
+
+* [3plug Control Runbook](./docs/3plug-control-runbook.md)
 
 ### 1. Prepare the Linux server
 
