@@ -31,11 +31,14 @@ sudo chown -R $USER:$USER /opt/triotek
 cd /opt/triotek
 ```
 
-### 2. Optional: create the frappe user
+### 2. Create the frappe user and switch into it
 
 ```bash
 sudo adduser frappe
 sudo usermod -aG sudo frappe
+sudo chown -R frappe:frappe /opt/triotek
+sudo su - frappe
+cd /opt/triotek
 ```
 
 ### 3. Do first cleanup

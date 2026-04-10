@@ -88,11 +88,14 @@ sudo apt -y upgrade
 sudo apt -y install git curl vim ufw fail2ban nginx certbot python3-certbot-nginx
 ```
 
-If you prefer a separate app user:
+Create the `frappe` user and switch into it before continuing:
 
 ```bash
 sudo adduser frappe
 sudo usermod -aG sudo frappe
+sudo chown -R frappe:frappe /opt/triotek
+sudo su - frappe
+cd /opt/triotek
 ```
 
 ### 2. Do the first server cleanup and layout
