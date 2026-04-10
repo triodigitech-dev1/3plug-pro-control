@@ -417,10 +417,21 @@ If you already created a bench with Python 3.11, 3.12, or 3.14 and installation 
 
 ### 12e. Install Bench from the user-owned fork of Triotek Bench
 
+This step has not changed.
+
+The working Bench installation command is still:
+
 ```bash
 uv tool install "git+ssh://git@github.com/YOUR_GITHUB_USER/triotek-bench.git"
 bench --version
 ```
+
+Why the runbook changed later:
+
+* this Bench install step was already working
+* the failures started later, when `bench init` bootstrapped Frappe and when `bench get-app /opt/triotek/control` installed the Press-derived app
+* so we did not replace the working Bench install command
+* we only changed the later bootstrap path so Bench uses a compatible Python and pinned Frappe source/branch
 
 ### 12f. Create the Bench workspace under `/opt/triotek`
 
@@ -445,6 +456,14 @@ Use an explicit Frappe source and branch for this stack instead of letting `benc
 
 * Frappe source: `https://github.com/balamurali27/frappe`
 * Frappe branch: `fc-ci`
+
+This is the part that changed, not the Bench install command above.
+
+The reason is:
+
+* your forked Triotek Bench tool installed correctly
+* default `bench init` then pulled a Frappe base that did not match this Press-derived stack cleanly
+* the fix is to keep using the same Bench command, but pin the Frappe bootstrap path during `bench init`
 
 ```bash
 cd /opt/triotek
