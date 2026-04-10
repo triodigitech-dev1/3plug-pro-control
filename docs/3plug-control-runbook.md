@@ -362,30 +362,62 @@ Install Node, Yarn, uv, Python, and the user-owned fork of the Triotek-controlle
 
 Do not use the community Bench package for this setup.
 
+### 12a. Install Node.js with `nvm`
+
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 source ~/.bashrc
 nvm install 24
-npm install -g yarn
-
-curl -LsSf https://astral.sh/uv/install.sh | sh
-source ~/.bashrc
-uv python install 3.14 --default
-uv tool install "git+ssh://git@github.com/YOUR_GITHUB_USER/triotek-bench.git"
+nvm use 24
+nvm alias default 24
+node -v
 ```
 
-Confirm Bench is available:
+### 12b. Install Yarn
 
 ```bash
+npm install -g yarn
+yarn -v
+```
+
+### 12c. Install `uv` and refresh the shell path
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source $HOME/.local/bin/env
+uv --version
+```
+
+If `uv` is still shadowed by an older command in your shell, run:
+
+```bash
+which uv
+```
+
+and confirm the path you want is under `/home/frappe/.local/bin/uv`.
+
+### 12d. Install Python for Bench
+
+```bash
+uv python install 3.14 --default
+python3 --version
+```
+
+### 12e. Install Bench from the user-owned fork of Triotek Bench
+
+```bash
+uv tool install "git+ssh://git@github.com/YOUR_GITHUB_USER/triotek-bench.git"
 bench --version
 ```
 
-Create the bench itself:
+### 12f. Create the Bench workspace under `/opt/triotek`
 
 ```bash
 cd /opt/triotek
+pwd
 bench init frappe-bench
 cd /opt/triotek/frappe-bench
+pwd
 bench --version
 ```
 

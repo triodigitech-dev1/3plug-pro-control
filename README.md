@@ -431,37 +431,77 @@ which wkhtmltopdf
 
 This is the bench that will run the actual control panel.
 
-Then run the user-level Bench setup with the user-owned fork of the Triotek-controlled Bench source over SSH, not the community one:
+#### 6a. Install Node.js with `nvm`
 
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 source ~/.bashrc
 nvm install 24
+nvm use 24
+nvm alias default 24
+node -v
+```
+
+#### 6b. Install Yarn
+
+```bash
 npm install -g yarn
+yarn -v
+```
 
+#### 6c. Install `uv` and refresh the shell path
+
+```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
-source ~/.bashrc
-uv python install 3.14 --default
-uv tool install "git+ssh://git@github.com/YOUR_GITHUB_USER/triotek-bench.git"
+source $HOME/.local/bin/env
+uv --version
+```
 
-cd /opt/triotek
-bench init frappe-bench
-cd /opt/triotek/frappe-bench
+If `uv` is still shadowed by an older command in your shell, run:
+
+```bash
+which uv
+```
+
+and confirm the path you want is under `/home/frappe/.local/bin/uv`.
+
+#### 6d. Install Python for Bench
+
+```bash
+uv python install 3.14 --default
+python3 --version
+```
+
+#### 6e. Install Bench from the user-owned fork of Triotek Bench
+
+```bash
+uv tool install "git+ssh://git@github.com/YOUR_GITHUB_USER/triotek-bench.git"
 bench --version
 ```
 
-Once Bench is available on the server:
+#### 6f. Create the Bench workspace under `/opt/triotek`
+
+```bash
+cd /opt/triotek
+pwd
+bench init frappe-bench
+cd /opt/triotek/frappe-bench
+pwd
+bench --version
+```
+
+#### 6g. Clone the 3plug product from the user-owned fork
 
 ```bash
 cd /opt/triotek
 git clone git@github.com:YOUR_GITHUB_USER/3plug-pro-control.git control
-cd control
+cd /opt/triotek/control
 npm install --legacy-peer-deps
 git remote add upstream git@github.com:Triotek-Ltd/3plug-pro-control.git
 git remote -v
 ```
 
-Then add the app into your Frappe bench:
+Once Bench is available on the server:
 
 ```bash
 cd /opt/triotek/frappe-bench
