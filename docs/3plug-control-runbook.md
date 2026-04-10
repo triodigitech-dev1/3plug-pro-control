@@ -398,19 +398,22 @@ and confirm the path you want is under `/home/frappe/.local/bin/uv`.
 
 ### 12d. Install Python for Bench
 
-Use Python 3.12 for the first setup run.
+Use Python 3.12 for the first setup run, and pin the Frappe source/branch during `bench init`.
 
 Why:
 
-* Python 3.11 is too old for the Frappe code currently being pulled during `bench init`
+* the default Frappe source currently pulled by `bench init` asks for Python 3.14+
 * Python 3.14 is too new for parts of the Press-derived stack and can fail on dependencies such as `greenlet`
+* the project helper install path already pins a compatible Frappe source and branch:
+  * `https://github.com/balamurali27/frappe`
+  * branch `fc-ci`
 
 ```bash
 uv python install 3.12 --default
 python3 --version
 ```
 
-If you already created a bench with Python 3.11 or Python 3.14 and installation failed, remove that failed bench and recreate it with Python 3.12 before continuing.
+If you already created a bench with Python 3.11, 3.12, or 3.14 and installation failed, remove that failed bench and recreate it with Python 3.12 plus the explicit Frappe source/branch before continuing.
 
 ### 12e. Install Bench from the user-owned fork of Triotek Bench
 
@@ -446,7 +449,7 @@ Use an explicit Frappe source and branch for this stack instead of letting `benc
 ```bash
 cd /opt/triotek
 pwd
-bench init frappe-bench --frappe-path https://github.com/balamurali27/frappe --frappe-branch fc-ci
+bench init frappe-bench --python /home/frappe/.local/share/uv/python/cpython-3.12-linux-x86_64-gnu/bin/python3.12 --frappe-path https://github.com/balamurali27/frappe --frappe-branch fc-ci
 ```
 
 After `bench init` finishes successfully, verify the new bench directory:
