@@ -177,12 +177,7 @@ sudo grep -E "^(Port|PermitRootLogin|PasswordAuthentication|PubkeyAuthentication
 
 The GitHub SSH key for the `frappe` working user comes later in the git setup section. This hardening step is only for securing server access itself.
 
-If you want to harden SSH further, the Press base already contains hardening-oriented playbooks such as:
-
-* `press/playbooks/harden.yml`
-* `press/playbooks/fail2ban.yml`
-* `press/playbooks/ufw.yml`
-* `press/playbooks/roles/sshd_hardening/*`
+For normal first setup, the commands above are enough. The Press playbooks can stay as future operator-maintainer tooling, not something the first-time installer needs to use.
 
 ### 4. Prepare the working user for source control
 
@@ -245,14 +240,14 @@ gh repo fork Triotek-Ltd/3plug-pro-control --clone=false --remote=false
 
 Replace `YOUR_GITHUB_USER` below with the GitHub account or org that owns those forks.
 
-### 5. Set up the bench that will host 3plug itself
+### 5. Prepare the bench host prerequisites
 
-This is the bench that will run the actual control panel.
-
-Use the current official Bench setup path, then create the bench that will host 3plug.
+Before installing Bench itself, make sure the host prerequisites are ready.
 
 * https://docs.frappe.io/framework/user/en/tutorial/install-and-setup-bench
 * https://docs.frappe.io/framework/user/en/installation
+
+#### 5a. Install the base system packages
 
 Efficient base commands on Ubuntu / Debian:
 
@@ -266,6 +261,8 @@ sudo systemctl start mariadb redis-server
 sudo systemctl status mariadb --no-pager
 sudo systemctl status redis-server --no-pager
 ```
+
+#### 5b. Harden and verify MariaDB
 
 Run MariaDB hardening before Bench:
 
@@ -314,6 +311,8 @@ sudo mariadb -e "SHOW VARIABLES LIKE 'collation_server';"
 sudo systemctl status mariadb --no-pager
 ```
 
+#### 5c. Install and verify wkhtmltopdf
+
 Install wkhtmltopdf with patched Qt:
 
 ```bash
@@ -323,6 +322,10 @@ wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-2/wkhtmlt
 sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb || sudo apt-get -f install -y
 wkhtmltopdf --version
 ```
+
+### 6. Install the bench that will host 3plug itself
+
+This is the bench that will run the actual control panel.
 
 Then run the user-level Bench setup with the Triotek-controlled Bench source over SSH, not the community one:
 

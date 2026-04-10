@@ -109,6 +109,8 @@ sudo grep -E "^(Port|PermitRootLogin|PasswordAuthentication|PubkeyAuthentication
 
 The GitHub SSH key for the `frappe` working user is created later in Phase 3 during git setup. This Phase 2 step is only for securing SSH access to the server itself.
 
+For normal first setup, the commands above are enough. The Press playbooks can stay as future operator-maintainer tooling, not something the first-time installer needs to use.
+
 ## Phase 3: Prepare the working user for source control
 
 ### 7. Switch into the frappe user
