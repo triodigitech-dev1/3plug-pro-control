@@ -337,25 +337,80 @@ lsb_release -a
 
 For Ubuntu 24.04 (`noble`), use:
 
-```bash
+1. Go to `/tmp`:
 
+```bash
 cd /tmp
+```
+
+2. Download the package:
+
+```bash
 wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+```
+
+3. Confirm the file exists:
+
+```bash
 ls -lh wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+```
+
+4. Install the package:
+
+```bash
 sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb || sudo apt-get -f install -y
+```
+
+5. Run dependency repair once more to be safe:
+
+```bash
 sudo apt-get -f install -y
+```
+
+6. Verify the final binary:
+
+```bash
 wkhtmltopdf --version
+which wkhtmltopdf
 ```
 
 For Ubuntu 20.04 (`focal`), use:
 
+1. Go to `/tmp`:
+
 ```bash
 cd /tmp
+```
+
+2. Download the package:
+
+```bash
 wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb
+```
+
+3. Confirm the file exists:
+
+```bash
 ls -lh wkhtmltox_0.12.6-1.focal_amd64.deb
+```
+
+4. Install the package:
+
+```bash
 sudo dpkg -i wkhtmltox_0.12.6-1.focal_amd64.deb || sudo apt-get -f install -y
+```
+
+5. Run dependency repair once more to be safe:
+
+```bash
 sudo apt-get -f install -y
+```
+
+6. Verify the final binary:
+
+```bash
 wkhtmltopdf --version
+which wkhtmltopdf
 ```
 
 ### 6. Install the bench that will host 3plug itself
