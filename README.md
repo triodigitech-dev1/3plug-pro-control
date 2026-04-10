@@ -1,95 +1,203 @@
-<div align="center" markdown="1">
+# 3plug Control
 
-<img src="https://frappe.io/files/cloud9c3ae6.png" alt="Press logo" width="80"/>
-<h1>Press</h1>
+3plug Control is Triotek's Press-derived control plane for Frappe operations.
 
-**Full Service Cloud Hosting For The Frappe Stack - Powers Frappe Cloud**
+It is no longer being shaped as a broad multi-server cloud product first.
 
-[![codecov](https://codecov.io/gh/frappe/press/branch/master/graph/badge.svg?token=0puvH0jUx9)](https://codecov.io/gh/frappe/press)
-[![unittests](https://github.com/frappe/press/actions/workflows/main.yaml/badge.svg)](https://github.com/frappe/press/actions/workflows/main.yaml)
+The current v1 direction is:
 
-</div>
+* one 3plug deployment per managed server
+* one managed Linux server in that deployment
+* many benches on that server
+* many sites on those benches
+* jobs, plays, and forensic records for traceability
 
-<div align="center">
-	<img width="889" alt="Managed press" src="https://github.com/user-attachments/assets/2675e828-d5ed-4527-a038-7742a5cfa3db" />
-</div>
-<br />
-<div align="center">
-	<a href="https://frappe.io/press">Website</a>
-	-
-	<a href="https://docs.frappe.io/cloud/">Documentation</a>
-</div>
+This repo uses Press as the base and is being adapted into the operator product Triotek actually wants to run.
 
-## Press
+## What 3plug is for
 
-Press is a 100% open-source cloud hosting for the Frappe stack.
+The current product spine is:
 
-### Motivation
+* register a managed Linux server
+* verify and set up the self-hosted server through the real Press flow
+* onboard an existing bench from that server
+* discover apps and sites from the real bench
+* create the managed bench record
+* import managed site records
+* review jobs, plays, and forensic signals from the dashboard
 
-We originally hosted our customer sites on an internal cloud platform called "Central," designed to automate creating and hosting sites when customers signed up on our website. Central was primarily built to host ERPNext, our flagship product. However, as our customers' needs evolved, they began requesting the ability to host custom applications, a feature that was not a priority in Central.
+This is not the old coordination-repo CLI path anymore.
 
-Additionally, customers lacked full control over their servers—no SSH access, no ability to manage updates, and limited flexibility in interacting with their environment. This led us to launch Frappe Cloud, to build a self-serve cloud platform that would empower our customers with complete control over their hosting experience.
+This is also not a billing-first control plane anymore.
 
-### Key Features
+Business billing and payment collection belong in the separate admin/business site, not here.
 
-- **Multitenancy Made Easy**: Press simplifies multi-tenancy by enabling multiple sites on a single platform, each with its app version, allowing independent updates and minimal downtime, even for large sites.
-- **Dashboard**: The dashboard provides a centralized interface to manage apps, servers, sites, billing, backups, and updates, offering real-time insights and streamlined control of complex operations.
+## Current scope
 
-- **Permissions**: Granular access controls let team owners manage roles and resources efficiently, ensuring users have access only to relevant information and actions for their roles.
+In scope for v1:
 
-- **Simplified Management**: Press streamlines site management with automated backups, real-time monitoring, role-based access, and easy scaling, making it ideal for growing Frappe environments.
+* managed server registration
+* bench onboarding
+* managed site import
+* job and play visibility
+* forensic logging and incident signals
+* operator-first dashboard workflows
 
-- **Billing**: Automated billing supports daily or monthly subscriptions, flexible payment methods, wallet credits, and ERP integration, simplifying customer invoicing and payments.
+Deferred from Press for v1:
 
-- **Marketplace**: The marketplace allows developers to list apps with flexible pricing models, ensures compatibility checks, and provides a streamlined system for sales and payouts.
+* broad multi-server cloud orchestration
+* commercial billing and subscriptions
+* partner and marketplace breadth
+* wider infrastructure-role expansion that does not help the first server -> bench -> site path
 
-<details>
-  <summary>Screenshots</summary>
+See:
 
-![Dashboard](https://github.com/user-attachments/assets/1904fa3e-39aa-4151-8276-d3cc622ed582)
-![Permissions](https://github.com/user-attachments/assets/60da6b5e-8f48-4483-99cf-67886ccc8bd6)
-![Bench Group Update](https://github.com/user-attachments/assets/2be6b0ee-084d-4949-8d13-218b5a218d3d)
-![Marketplace](https://github.com/user-attachments/assets/2f325737-7929-485d-a670-549f986fd07e)
+* [V1 product scope](./triotek/planning/docs/V1_PRODUCT.md)
+* [Single-server adaptation](./triotek/planning/docs/SINGLE_SERVER_ADAPTATION.md)
+* [Cleanup and transition log](./triotek/planning/docs/CLEANUP_ACTIVITY_LOG.md)
 
-</details>
+## Actual Linux server setup
 
-### Under the Hood
+This is the updated setup path for testing on real Linux infrastructure.
 
-- [**Frappe Framework**](https://github.com/frappe/frappe): A full-stack web application framework written in Python and Javascript. The framework provides a robust foundation for building web applications, including a database abstraction layer, user authentication, and a REST API.
+### 1. Prepare the 3plug control plane
 
-- [**Frappe UI**](https://github.com/frappe/frappe-ui): A Vue-based UI library, to provide a modern user interface. The Frappe UI library provides a variety of components that can be used to build single-page applications on top of the Frappe Framework.
+Before onboarding a target server, make sure the control plane itself is ready:
 
-- [**Agent**](https://github.com/frappe/agent): A flask app designed to work along with Press. It provides a CLI interface for Press to communicate with the sites and benches.
+* this repo is deployed and reachable
+* the dashboard is accessible
+* your operator team has self-hosted server access enabled
+* a default SSH key exists in the control plane, because the managed-server flow copies and uses that key for verification
 
-- [**Docker**](https://www.docker.com): An open-source platform that enables developers to build, package, and deploy applications in lightweight, portable containers.
+The current managed registration page uses:
 
-- [**Ansible**](https://www.ansible.com): An open-source IT automation tool that simplifies the management, configuration, and deployment of systems and applications.
+* a self-hosted server plan from `press.api.selfhosted.options_for_new`
+* the default SSH public key from the same endpoint
 
-## Setup
+### 2. Prepare the target Linux environment
 
-To self host or to setup Press locally follow the steps in the [Local Development Environment Setup Guide](https://docs.frappe.io/cloud/local-fc-setup).
+The current managed-server flow expects Linux hosts that 3plug can reach over SSH and verify with Ansible.
 
-### Migrate to Frappe Cloud
+Current baseline assumptions from the product:
 
-If you are planning to migrate your site to Frappe Cloud, please refer to [this YouTube video](https://www.youtube.com/watch?v=Xb9QHnUrIEk)
+* SSH access from 3plug to the target host or hosts
+* the default 3plug SSH key is installed for the verification user
+* private IP values supplied in the form must actually belong to the target machines
+* minimum baseline remains 4 GB RAM, 2 vCPU, and 40+ GB storage
+* Docker is part of the environment baseline and is not currently treated as a special blocker
 
-### Pre-commit
+The current registration flow asks for:
 
-There's a [pre-commit](https://pre-commit.com/) hook included in the repo. You can set it up by running [setup-pre-commit.sh](https://github.com/frappe/press/blob/develop/setup-pre-commit.sh) script.
+* application public IP
+* application private IP
+* database public IP
+* database private IP
 
-## Learn and connect
+If your first live setup uses a single Linux box for both application and database duties, use the matching app and db IP values for that box. This is an inference from the current registration flow and should be the simplest first test.
 
-- [Telegram Public Group](https://t.me/frappecloud)
-- [Discuss Forum](https://discuss.frappe.io/c/frappe-cloud/77)
-- [Documentation](https://docs.frappe.io/cloud)
+### 3. Register the managed server in 3plug
 
-<br/>
-<br/>
-<div align="center" style="padding-top: 0.75rem;">
-	<a href="https://frappe.io" target="_blank">
-		<picture>
-			<source media="(prefers-color-scheme: dark)" srcset="https://frappe.io/files/Frappe-white.png">
-			<img src="https://frappe.io/files/Frappe-black.png" alt="Frappe Technologies" height="28"/>
-		</picture>
-	</a>
-</div>
+Use the dashboard flow:
+
+* open `Servers`
+* choose `Register Managed Server`
+* enter the server title and IP details
+* copy the displayed SSH key if you still need to place it on the target host
+* submit the registration
+
+What happens next:
+
+* 3plug creates the self-hosted server record
+* 3plug verifies both application and database endpoints
+* 3plug starts the managed server setup flow
+* the next operator visibility is on the server plays and jobs
+
+Relevant product files:
+
+* [RegisterManagedServer.vue](./dashboard/src/pages/RegisterManagedServer.vue)
+* [selfhosted.py](./press/api/selfhosted.py)
+
+### 4. Onboard the existing bench
+
+After the server is registered:
+
+* open the managed server
+* open the `Bench Onboarding` tab
+* enable existing bench import if the bench already exists on the Linux server
+* save the real bench path
+* run bench discovery
+* create the managed bench
+* create managed sites
+* run file restore if needed
+
+The onboarding page now exposes:
+
+* stage-by-stage onboarding progress
+* recent jobs
+* recent plays
+* execution status for discovery, managed bench creation, managed site import, and file restore
+
+Relevant product files:
+
+* [ServerBenchOnboarding.vue](./dashboard/src/components/server/ServerBenchOnboarding.vue)
+* [selfhosted.py](./press/api/selfhosted.py)
+
+### 5. Validate the first live test
+
+For the first real server test, keep it narrow:
+
+1. register one managed server
+2. discover one real bench
+3. create one managed bench
+4. import one or more managed sites
+5. confirm jobs and plays are visible
+6. confirm forensic events and signals are being captured
+
+This is the quickest route to useful feedback.
+
+## Local verification
+
+For local dashboard verification in this repo:
+
+```powershell
+$env:LOCAL_VERIFY_BUILD='1'
+& 'C:\Program Files\nodejs\npm.cmd' install --legacy-peer-deps
+& 'C:\Program Files\nodejs\npm.cmd' run build
+```
+
+The verification build uses the guarded local mode added in `dashboard/vite.config.ts`.
+
+Backend syntax checks used during current product work:
+
+```powershell
+python -m py_compile press\api\selfhosted.py
+python -m py_compile press\press\doctype\team\team.py
+```
+
+## MVP status
+
+3plug Control is now past the cleanup-only stage.
+
+Current live-testable product areas:
+
+* managed server registration
+* managed bench onboarding
+* managed site import
+* jobs and plays visibility
+* forensic event capture
+* forensic incident signals
+* home control-center summaries
+
+Still worth treating as active MVP work during live testing:
+
+* validating the first real Linux happy path end to end
+* catching leftover Press assumptions that do not fit the one-server model
+* tightening unclear status messages or missing next actions based on real operator feedback
+
+## Development note
+
+This repo still contains broader Press code because 3plug is being built from Press, not from a blank slate.
+
+That does not mean all Press features are part of the 3plug product.
+
+When in doubt, follow the single-server operator model described in the planning docs and recent cleanup log.
