@@ -32,7 +32,11 @@ Updated [pyproject.toml](./../../../pyproject.toml) to better match a Frappe 16-
 * `stripe>=11,<14`
 * `tomli~=2.2.1; python_version < '3.11'`
 
-Removed earlier temporary reliance on the old `urllib3<2` compatibility path from package metadata.
+Fresh-bench retesting later showed the runtime environment still pulled a dependency path that imports `urllib3.contrib.appengine`.
+
+Because that module was removed in `urllib3 2.x`, the compatibility set was corrected to keep:
+
+* `urllib3<2`
 
 During fresh-bench install testing, `pyOpenSSL~=25.1.0` was found to conflict with `oci==2.116.0`, which requires `pyOpenSSL<24.0.0`.
 
@@ -41,6 +45,15 @@ The pin was therefore corrected to:
 * `pyOpenSSL>=23.2.0,<24`
 
 This keeps the app compatible with its current OCI dependency while still avoiding the older, looser historical pin.
+
+Another fresh-bench check showed the environment was resolving to:
+
+* `urllib3 2.6.3`
+* `requests 2.32.5`
+* `PyGithub 2.9.1`
+* `oci 2.116.0`
+
+Despite the newer `PyGithub`, one installed dependency path still expected `urllib3.contrib.appengine`, so the app compatibility set continues to require `urllib3<2` for now.
 
 Added:
 
