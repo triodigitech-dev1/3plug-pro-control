@@ -175,9 +175,21 @@ Source URLs to fork:
 * `https://github.com/Triotek-Ltd/triotek-bench`
 * `https://github.com/Triotek-Ltd/3plug-pro-control`
 
-You can fork them from the GitHub web UI with the `Fork` button, or with GitHub CLI if `gh` is installed:
+Choose one forking path below. Do not do both.
+
+#### Option A. Fork in the GitHub web UI
+
+Use the `Fork` button on both source repositories in your browser.
+
+If you already forked both repos in the web UI, skip the GitHub CLI forking steps below and go straight to the verification steps.
+
+#### Option B. Fork with GitHub CLI
+
+Use this path only if you want to fork from the server instead of the browser.
 
 ```bash
+sudo apt install -y gh
+gh --version
 gh auth login -h github.com -p ssh -w
 gh repo fork Triotek-Ltd/triotek-bench --clone=false --remote=false
 gh repo fork Triotek-Ltd/3plug-pro-control --clone=false --remote=false
@@ -520,7 +532,13 @@ pwd
 bench --version
 ```
 
-If `bench init` was already run with the wrong Frappe source or branch and failed during Frappe install, remove the failed bench and rerun the command above with the explicit `--frappe-path` and `--frappe-branch`.
+If `bench init` was already run with the wrong Frappe source or branch and failed during Frappe install, rename the failed bench and rerun the command above with the explicit `--frappe-path` and `--frappe-branch`.
+
+Example:
+
+```bash
+mv /opt/triotek/frappe-bench /opt/triotek/frappe-bench-broken-f16
+```
 
 ### 13. Clone the 3plug product from your fork
 
