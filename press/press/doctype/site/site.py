@@ -18,7 +18,6 @@ import requests
 import rq
 from frappe import _, has_permission
 from frappe.core.utils import find
-from frappe.frappeclient import FrappeClient, FrappeException
 from frappe.model.document import Document
 from frappe.model.naming import append_number_if_name_exists
 from frappe.utils import (
@@ -52,6 +51,7 @@ from press.press.doctype.communication_info.communication_info import get_commun
 from press.press.doctype.root_domain.root_domain import get_matching_domain
 from press.press.doctype.server.server import Server
 from press.saas.doctype.product_trial.product_trial import create_free_app_subscription
+from press.utils.frappeclient_compat import FrappeClient, FrappeException
 from press.utils.jobs import has_job_timeout_exceeded
 from press.utils.telemetry import capture
 from press.utils.webhook import create_webhook_event

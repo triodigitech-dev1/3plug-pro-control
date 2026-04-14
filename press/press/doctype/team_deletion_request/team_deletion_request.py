@@ -139,13 +139,14 @@ class TeamDeletionRequest(PersonalDataDeletionRequest):
 	@handle_exc
 	def delete_stripe_customer(self):
 		from press.api.billing import get_stripe
+		from press.utils.billing import get_stripe_exception
 
 		stripe = get_stripe()
 		team = self.team_doc
 
 		try:
 			stripe.Customer.delete(team.stripe_customer_id)
-		except stripe.error.InvalidRequestError as e:
+		except get_stripe_exception("InvalidRequestError") as e:
 			if "No such customer" not in str(e):
 				raise e
 

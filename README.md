@@ -969,6 +969,14 @@ Check: the binary path should resolve successfully.
 
 This bench will run the real control panel.
 
+If you previously created a broken bench and renamed it to something like `frappe-bench-broken-f16`, do not start from the top of the README again.
+
+Use this restart rule:
+
+* if `bench --version` still works for the `frappe` user, resume from `6f`
+* if `/opt/triotek/control` already exists and already points at your 3plug product checkout, keep it and do not clone it again
+* if both the Bench tool and the control checkout are already present, your fresh-bench restart point is `6f.1`
+
 #### 6a. Install Node.js with `nvm`
 
 ##### 6a.1 Install `nvm`
@@ -1112,6 +1120,8 @@ Why the docs changed later:
 
 Run Bench as `frappe`, not with `sudo`.
 
+If you only renamed the old broken bench and kept the rest of `/opt/triotek`, this is the section to restart from.
+
 ##### 6f.1 Move to `/opt`
 
 ```bash
@@ -1196,6 +1206,14 @@ Check: Bench should still resolve inside the new workspace.
 If `bench init` already failed with the wrong Frappe source or branch, remove that failed bench and rerun it with the explicit `--frappe-path` and `--frappe-branch`.
 
 #### 6g. Clone the 3plug product from the user-owned fork
+
+If `/opt/triotek/control` already exists and is your current 3plug checkout, do not clone it again.
+
+In that case:
+
+* skip `6g.1` through `6g.6`
+* move straight to `6g.7`
+* make sure the existing checkout has your latest intended code before you continue
 
 ##### 6g.1 Clone the product fork
 

@@ -12,11 +12,11 @@ from typing import Optional, TypedDict
 
 import frappe
 import semantic_version as sv
-import tomli
 from frappe.model.document import Document
 
 from press.api.github import get_access_token
 from press.press.doctype.app_source.app_source import AppSource
+from press.utils.toml import TOMLDecodeError, load
 from press.utils import log_error
 
 if typing.TYPE_CHECKING:
@@ -622,7 +622,7 @@ def get_python_path(dirpath: str) -> str:
 	if os.path.isfile(pyproject_path):
 		# To handle broken toml files or missing fields
 		with open(pyproject_path, "rb") as f, contextlib.suppress(Exception):
-			pyproject_data = tomli.load(f)
+			pyproject_data = load(f)
 			requires_python = pyproject_data.get("project", {}).get("requires-python")
 			if requires_python:
 				version_spec = sv.SimpleSpec(requires_python)
@@ -682,8 +682,6 @@ def check_python_syntax(dirpath: str) -> str:
 def check_pyproject_syntax(dirpath: str) -> str:
 	# tomllib does not report errors as expected
 	# instead returns empty dict
-	from tomli import TOMLDecodeError, load
-
 	pyproject_path = os.path.join(dirpath, "pyproject.toml")
 	if not os.path.isfile(pyproject_path):
 		return ""

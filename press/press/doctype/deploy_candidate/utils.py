@@ -86,10 +86,7 @@ def _get_package_manager_files_from_repo(
 
 
 def load_pyproject(app: str, pyproject_path: str):
-	try:
-		from tomli import TOMLDecodeError, load
-	except ImportError:
-		from tomllib import TOMLDecodeError, load  # type: ignore
+	from press.utils.toml import TOMLDecodeError, load
 
 	with open(pyproject_path, "rb") as f:
 		try:

@@ -1,8 +1,6 @@
 import re
 
 import frappe
-import razorpay
-import stripe
 from frappe.utils import fmt_money
 
 from press.exceptions import CentralServerNotSet, FrappeioServerNotSet
@@ -56,7 +54,7 @@ def format_stripe_money(amount, currency):
 
 
 def get_erpnext_com_connection():
-	from frappe.frappeclient import FrappeClient
+	from press.utils.frappeclient_compat import FrappeClient
 
 	press_settings = frappe.get_single("Press Settings")
 	erpnext_api_secret = press_settings.get_password("erpnext_api_secret", raise_exception=False)
@@ -75,7 +73,7 @@ def get_frappe_io_connection():
 	if hasattr(frappe.local, "press_frappeio_conn"):
 		return frappe.local.press_frappeio_conn
 
-	from frappe.frappeclient import FrappeClient
+	from press.utils.frappeclient_compat import FrappeClient
 
 	press_settings = frappe.get_single("Press Settings")
 	frappe_api_key = press_settings.frappeio_api_key
@@ -156,6 +154,7 @@ def get_setup_intent(team):
 
 def get_stripe():
 	from frappe.utils.password import get_decrypted_password
+	import stripe
 
 	if not hasattr(frappe.local, "press_stripe_object"):
 		secret_key = get_decrypted_password(
@@ -175,6 +174,14 @@ def get_stripe():
 		frappe.local.press_stripe_object = stripe
 
 	return frappe.local.press_stripe_object
+
+
+def get_stripe_exception(name: str):
+	stripe = get_stripe()
+	error_namespace = getattr(stripe, "error", None)
+	if error_namespace and hasattr(error_namespace, name):
+		return getattr(error_namespace, name)
+	return getattr(stripe, name, Exception)
 
 
 def convert_stripe_money(amount):
@@ -201,6 +208,7 @@ def validate_gstin_check_digit(gstin, label="GSTIN"):
 
 def get_razorpay_client():
 	from frappe.utils.password import get_decrypted_password
+	import razorpay
 
 	if not hasattr(frappe.local, "press_razorpay_client_object"):
 		key_id = frappe.db.get_single_value("Press Settings", "razorpay_key_id")
@@ -250,7 +258,7 @@ def get_partner_external_connection(mpesa_setup):
 	if hasattr(frappe.local, "_external_conn"):
 		return frappe.local.press_external_conn
 
-	from frappe.frappeclient import FrappeClient
+	from press.utils.frappeclient_compat import FrappeClient
 
 	# Fetch API from gateway
 	payment_gateway = frappe.get_all(

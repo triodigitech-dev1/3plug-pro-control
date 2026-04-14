@@ -7,7 +7,7 @@ mypy==1.18.2
 setuptools~=81.0
 ipdb==0.13.13
 freezegun==1.2.2
-types-requests<2.32
+types-requests~=2.32
 types-pytz~=2025.2
 types-python-dateutil~=2.9.0
 types-boto3==1.39.14

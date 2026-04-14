@@ -1,4 +1,4 @@
-from frappe.frappeclient import FrappeClient
+from press.utils.frappeclient_compat import FrappeClient
 
 
 class FrappePressClient(FrappeClient):

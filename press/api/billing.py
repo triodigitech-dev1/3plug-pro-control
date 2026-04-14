@@ -32,6 +32,7 @@ from press.utils.billing import (
 	get_publishable_key,
 	get_razorpay_client,
 	get_setup_intent,
+	get_stripe_exception,
 	get_stripe,
 	make_formatted_doc,
 	states_with_tin,
@@ -342,7 +343,7 @@ def create_payment_intent_for_prepaid_app(amount, metadata):
 			"client_secret": intent["client_secret"],
 			"publishable_key": get_publishable_key(),
 		}
-	except stripe.error.CardError as e:
+	except get_stripe_exception("CardError") as e:
 		err = e.error
 		if err.code == "authentication_required":
 			# Bring the customer back on-session to authenticate the purchase

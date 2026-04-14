@@ -6,10 +6,10 @@ from __future__ import annotations
 import os
 
 import frappe
-from frappe.frappeclient import FrappeClient
 
 from press.press.doctype.server.server import BaseServer
 from press.runner import Ansible
+from press.utils.frappeclient_compat import FrappeClient
 from press.utils import log_error
 
 

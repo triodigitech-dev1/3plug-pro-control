@@ -4,6 +4,7 @@ from pathlib import Path
 
 from press.marketplace.doctype.marketplace_app_audit.marketplace_app_audit import CheckResult
 from press.press.doctype.app_release.app_release import check_pyproject_syntax
+from press.utils.toml import TOMLDecodeError, load
 
 CATEGORY = "Versioning"
 DOCS_URL = "https://docs.frappe.io/cloud/custom-apps/app-versioning/versioning"
@@ -55,8 +56,6 @@ def run_versioning_checks(clone_dir: str) -> list[CheckResult]:
 
 
 def _safe_load_pyproject(pyproject_path: str) -> dict | None:
-	from tomli import TOMLDecodeError, load
-
 	try:
 		with open(pyproject_path, "rb") as f:
 			return load(f)
@@ -106,7 +105,7 @@ def check_pyproject_valid_syntax(clone_dir: str) -> CheckResult:
 		result="Fail",
 		message="pyproject.toml has invalid TOML syntax",
 		details=json.dumps({"syntax_error": syntax_error}),
-		remediation="Fix the TOML syntax errors in pyproject.toml. Validate locally with: python -c \"import tomli; tomli.load(open('pyproject.toml','rb'))\"",
+		remediation="Fix the TOML syntax errors in pyproject.toml. Validate locally with: python -c \"import tomllib; print(tomllib.load(open('pyproject.toml','rb')))\"",
 	)
 
 

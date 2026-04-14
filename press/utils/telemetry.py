@@ -1,11 +1,24 @@
 from __future__ import annotations
 
 from contextlib import suppress
+from typing import Any
 
 import frappe
-from posthog import Posthog
 
 from press.utils import log_error
+
+
+def _get_posthog_client_class():
+	try:
+		from posthog import Posthog
+
+		return Posthog
+	except ImportError:
+		with suppress(ImportError):
+			from posthog import Client
+
+			return Client
+	return None
 
 
 def init_telemetry():
@@ -19,13 +32,17 @@ def init_telemetry():
 	if not posthog_host or not posthog_project_id:
 		return
 
+	Posthog = _get_posthog_client_class()
+	if Posthog is None:
+		return
+
 	with suppress(Exception):
 		frappe.local.posthog = Posthog(posthog_project_id, host=posthog_host)
 
 
 def capture(event, app, distinct_id=None):
 	init_telemetry()
-	ph: Posthog = getattr(frappe.local, "posthog", None)
+	ph: Any = getattr(frappe.local, "posthog", None)
 	with suppress(Exception):
 		properties = {}
 		if app == "fc_product_trial":
@@ -37,7 +54,7 @@ def capture(event, app, distinct_id=None):
 
 def identify(site, **kwargs):
 	init_telemetry()
-	ph: Posthog = getattr(frappe.local, "posthog", None)
+	ph: Any = getattr(frappe.local, "posthog", None)
 	with suppress(Exception):
 		ph and ph.identify(site, kwargs)
 

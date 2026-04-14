@@ -440,7 +440,7 @@ def parse_grouped_versions(versions):
 @frappe.whitelist()
 @role_guard.api("partner")
 def get_certification_requests():
-	from frappe.frappeclient import FrappeClient
+	from press.utils.frappeclient_compat import FrappeClient
 
 	team = get_current_team()
 	cert_requests = frappe.get_all(

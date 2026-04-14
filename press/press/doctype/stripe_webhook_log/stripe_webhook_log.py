@@ -182,11 +182,13 @@ def get_invoice_id(form_dict):
 def parse_payload(payload, signature):
 	secret = frappe.db.get_single_value("Press Settings", "stripe_webhook_secret")
 	stripe = get_stripe()
+	from press.utils.billing import get_stripe_exception
+
 	try:
 		return stripe.Webhook.construct_event(payload, signature, secret)
 	except ValueError:
 		# Invalid payload
 		frappe.throw("Invalid Payload", InvalidStripeWebhookEvent)
-	except stripe.error.SignatureVerificationError:
+	except get_stripe_exception("SignatureVerificationError"):
 		# Invalid signature
 		frappe.throw("Invalid Signature", InvalidStripeWebhookEvent)

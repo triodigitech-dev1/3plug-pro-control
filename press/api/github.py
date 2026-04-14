@@ -13,8 +13,8 @@ from typing import TYPE_CHECKING
 import frappe
 import jwt
 import requests
-import tomli
 
+from press.utils.toml import TOMLDecodeError, loads
 from press.utils import get_current_team, log_error
 
 if TYPE_CHECKING:
@@ -314,8 +314,8 @@ def _get_compatible_frappe_version_from_pyproject(
 	pyproject = b64decode(pyproject["content"]).decode()
 
 	try:
-		pyproject = tomli.loads(pyproject)
-	except tomli.TOMLDecodeError as e:
+		pyproject = loads(pyproject)
+	except TOMLDecodeError as e:
 		out = []
 		out.append("Invalid pyproject.toml file found")
 
