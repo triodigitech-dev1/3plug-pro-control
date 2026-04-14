@@ -161,7 +161,7 @@ let router = createRouter({
 		{
 			name: 'New Server',
 			path: '/servers/new',
-			component: () => import('./pages/NewServer.vue'),
+			redirect: { name: 'Register Managed Server' },
 		},
 		{
 			name: 'Register Managed Server',

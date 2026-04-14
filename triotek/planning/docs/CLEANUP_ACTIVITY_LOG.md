@@ -547,3 +547,16 @@ Change:
 Reason:
 
 * the next real value is live-server testing, and that only becomes useful when the onboarding flow tells us which step actually ran, which one failed, and where to inspect the underlying play or job
+
+### 2026-04-13
+
+Change:
+
+* retired the old `/servers/new` dashboard entry point by redirecting it to `Register Managed Server`
+* hid self-hosted server-detail tabs that still present the older Press app-vs-db server model, including legacy overview, analytics, bench analytics, snapshots, and generic actions
+* removed self-hosted desk shortcuts that jump operators into legacy database-server records from the server detail options menu
+
+Reason:
+
+* the current 3plug product target is the managed-server workflow, not the broader legacy Press server-provisioning model
+* the fastest way to reduce operator confusion is to stop steering people into old server surfaces before we do deeper structural cleanup

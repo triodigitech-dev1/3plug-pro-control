@@ -213,7 +213,8 @@ export default {
 						{
 							label: 'View DB in Desk',
 							icon: icon('external-link'),
-							condition: () => $team.doc?.is_desk_user,
+							condition: () =>
+								$team.doc?.is_desk_user && !server.doc?.is_self_hosted,
 							onClick() {
 								window.open(
 									`${window.location.protocol}//${
@@ -227,7 +228,9 @@ export default {
 							label: 'View Replication DB in Desk',
 							icon: icon('external-link'),
 							condition: () =>
-								$team.doc?.is_desk_user && server.doc.replication_server,
+								$team.doc?.is_desk_user &&
+								!server.doc?.is_self_hosted &&
+								server.doc.replication_server,
 							onClick() {
 								window.open(
 									`${window.location.protocol}//${
@@ -255,7 +258,7 @@ export default {
 				label: 'Overview',
 				icon: icon('home'),
 				condition: (server) => {
-					return server.doc?.status !== 'Archived';
+					return server.doc?.status !== 'Archived' && !server.doc?.is_self_hosted;
 				},
 				route: 'overview',
 				type: 'Component',
@@ -269,7 +272,8 @@ export default {
 			{
 				label: 'Analytics',
 				icon: icon('bar-chart-2'),
-				condition: (server) => server.doc?.status !== 'Archived',
+				condition: (server) =>
+					server.doc?.status !== 'Archived' && !server.doc?.is_self_hosted,
 				route: 'analytics',
 				type: 'Component',
 				component: defineAsyncComponent(
@@ -299,7 +303,8 @@ export default {
 			{
 				label: 'Bench Analytics',
 				icon: icon('bar-chart-2'),
-				condition: (server) => server.doc?.status !== 'Archived',
+				condition: (server) =>
+					server.doc?.status !== 'Archived' && !server.doc?.is_self_hosted,
 				route: 'bench-group-analytics',
 				type: 'Component',
 				component: defineAsyncComponent(
@@ -529,7 +534,7 @@ export default {
 				icon: icon('camera'),
 				condition: (server) => {
 					if (!server?.doc) return true;
-					return server?.doc?.provider === 'AWS EC2';
+					return server?.doc?.provider === 'AWS EC2' && !server.doc?.is_self_hosted;
 				},
 				route: 'snapshots',
 				type: 'list',
@@ -931,7 +936,7 @@ export default {
 				label: 'Actions',
 				icon: icon('sliders'),
 				condition: (server) => {
-					return server.doc?.status !== 'Archived';
+					return server.doc?.status !== 'Archived' && !server.doc?.is_self_hosted;
 				},
 				route: 'actions',
 				type: 'Component',

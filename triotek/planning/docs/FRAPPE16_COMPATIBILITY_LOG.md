@@ -10,7 +10,8 @@ Start aligning the app with a Frappe 16 bench instead of continuing to patch a m
 
 ### Findings
 
-* The current README and runbook pointed bench bootstrap at `https://github.com/balamurali27/frappe`, branch `fc-ci`.
+* The current README and runbook originally pointed bench bootstrap at `https://github.com/balamurali27/frappe`, branch `fc-ci`.
+* The official Triotek framework and bench bases are `https://github.com/Triotek-Ltd/triotek-frappe.git` and `https://github.com/Triotek-Ltd/triotek-bench.git`.
 * On the server, that branch resolved to Frappe `16.0.0-dev`.
 * The app dependency metadata still reflected an older Press-era stack, which caused install-time conflicts and import failures.
 * Confirmed server-side symptoms included:

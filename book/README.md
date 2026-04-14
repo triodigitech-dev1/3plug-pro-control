@@ -99,3 +99,4 @@ The next pages in this book should explain:
 Start with:
 
 * [Product Target State](./product-target-state.md)
+* [Product Shell And Features](./product-shell-and-features.md)
