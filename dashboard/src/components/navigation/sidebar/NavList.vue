@@ -15,6 +15,7 @@ import Logs from '~icons/lucide/scroll-text';
 import Globe from '~icons/lucide/globe';
 import Code from '~icons/lucide/code';
 import FileSearch from '~icons/lucide/file-search';
+import Briefcase from '~icons/lucide/briefcase-business';
 import NotificationPanel from './Notifications.vue';
 
 import { unreadNotificationsCount } from '@/data/notifications';
@@ -63,28 +64,33 @@ const navigation = computed(() => {
 				routeName.startsWith('Site Detail'),
 			disabled: enforce2FA,
 		},
-		/* {
-			name: 'Benches',
-			icon: (Package),
-			route: '/benches',
-			isActive: routeName.startsWith('Bench'),
-			condition: $team.doc?.is_desk_user,
-			disabled: !onboardingComplete || enforce2FA,
-		}, */
 		{
 			name: 'Benches',
 			icon: Boxes,
-			route: onboardingComplete ? '/groups' : '/enable-bench-groups',
+			route: onboardingComplete ? '/benches' : '/enable-bench-groups',
 			isActive:
 				[
-					'Release Group List',
-					'Release Group Detail',
+					'Bench List',
+					'Bench Detail',
+					'Bench Job',
+					'Bench Log',
 					'New Release Group',
 					'Release Group New Site',
-					'Deploy Candidate',
 				].includes(routeName) ||
+				routeName.startsWith('Bench') ||
 				routeName.startsWith('Release Group Detail') ||
 				routeName === 'Enable Benches',
+			disabled: enforce2FA,
+		},
+		{
+			name: 'Apps',
+			icon: App,
+			route: '/apps',
+			isActive:
+				routeName.startsWith('Marketplace') ||
+				routeName === 'Install App' ||
+				$route.path.startsWith('/apps'),
+			condition: onboardingComplete && !isSaasUser,
 			disabled: enforce2FA,
 		},
 		{
@@ -107,6 +113,14 @@ const navigation = computed(() => {
 				['New Server', 'Register Managed Server'].includes(routeName) ||
 				routeName.startsWith('Server') ||
 				routeName === 'Enable Servers',
+			disabled: enforce2FA,
+		},
+		{
+			name: 'Team',
+			icon: Briefcase,
+			route: '/access-requests',
+			isActive: routeName === 'Access Requests',
+			condition: onboardingComplete && !isSaasUser,
 			disabled: enforce2FA,
 		},
 		{
@@ -169,22 +183,11 @@ const navigation = computed(() => {
 			].includes(routeName),
 		},
 		{
-			name: 'Marketplace',
-			icon: App,
-			route: '/apps',
-			isActive: routeName.startsWith('Marketplace'),
-			// Triotek v1 defers marketplace-facing product surfaces.
-			condition:
-				false &&
-				($team.doc?.is_desk_user ||
-					(!!$team.doc.is_developer && $session.hasAppsAccess)),
-			disabled: enforce2FA,
-		},
-		{
 			name: 'Access Requests',
 			icon: Key,
 			route: '/access-requests',
 			isActive: routeName === 'Access Requests',
+			condition: onboardingComplete && !isSaasUser,
 			disabled: enforce2FA,
 		},
 		{

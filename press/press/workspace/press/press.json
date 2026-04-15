@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"threeplug-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">3plug Control</span>\",\"col\":12}},{\"id\":\"threeplug-intro\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"threeplug-ops-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Operations</b></span>\",\"col\":12}},{\"id\":\"threeplug-managed-servers\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Managed Servers\",\"col\":3}},{\"id\":\"threeplug-servers\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Servers\",\"col\":3}},{\"id\":\"threeplug-benches\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Benches\",\"col\":3}},{\"id\":\"threeplug-sites\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sites\",\"col\":3}},{\"id\":\"threeplug-tenants\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Tenants\",\"col\":3}},{\"id\":\"threeplug-ops-spacer\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"threeplug-exec-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Execution</b></span>\",\"col\":12}},{\"id\":\"threeplug-jobs\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Jobs\",\"col\":3}},{\"id\":\"threeplug-plays\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Plays\",\"col\":3}},{\"id\":\"threeplug-forensics\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Forensics\",\"col\":3}},{\"id\":\"threeplug-signals\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Incident Signals\",\"col\":3}},{\"id\":\"threeplug-exec-spacer\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"threeplug-apps-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Applications</b></span>\",\"col\":12}},{\"id\":\"threeplug-apps\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Apps\",\"col\":3}},{\"id\":\"threeplug-app-sources\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"App Sources\",\"col\":3}},{\"id\":\"threeplug-app-releases\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"App Releases\",\"col\":3}},{\"id\":\"threeplug-analytics\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Analytics\",\"col\":3}},{\"id\":\"threeplug-apps-spacer\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"threeplug-admin-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Team And Settings</b></span>\",\"col\":12}},{\"id\":\"threeplug-team\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Operators\",\"col\":3}},{\"id\":\"threeplug-settings\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Control Settings\",\"col\":3}}]",
+ "content": "[{\"id\":\"threeplug-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">3plug Control</span>\",\"col\":12}},{\"id\":\"threeplug-runtime-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Runtime</b></span>\",\"col\":12}},{\"id\":\"threeplug-managed-servers\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Managed Servers\",\"col\":3}},{\"id\":\"threeplug-benches\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Benches\",\"col\":3}},{\"id\":\"threeplug-sites\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sites\",\"col\":3}},{\"id\":\"threeplug-tenants\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Tenants\",\"col\":3}},{\"id\":\"threeplug-runtime-records\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Runtime Records\",\"col\":3}},{\"id\":\"threeplug-runtime-spacer\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"threeplug-apps-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Apps</b></span>\",\"col\":12}},{\"id\":\"threeplug-apps\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Apps\",\"col\":3}},{\"id\":\"threeplug-app-sources\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"App Sources\",\"col\":3}},{\"id\":\"threeplug-app-releases\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"App Releases\",\"col\":3}},{\"id\":\"threeplug-apps-spacer\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"threeplug-execution-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Execution And Evidence</b></span>\",\"col\":12}},{\"id\":\"threeplug-jobs\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Jobs\",\"col\":3}},{\"id\":\"threeplug-plays\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Plays\",\"col\":3}},{\"id\":\"threeplug-forensics\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Forensics\",\"col\":3}},{\"id\":\"threeplug-execution-spacer\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"threeplug-admin-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Administration</b></span>\",\"col\":12}},{\"id\":\"threeplug-team\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Team\",\"col\":3}},{\"id\":\"threeplug-settings\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Control Settings\",\"col\":3}}]",
  "creation": "2024-07-30 18:43:18.421196",
  "custom_blocks": [],
  "docstatus": 0,
@@ -44,7 +44,7 @@
   {
    "color": "Blue",
    "doc_view": "List",
-   "label": "Servers",
+   "label": "Runtime Records",
    "link_to": "Server",
    "stats_filter": "[[\"Server\",\"status\",\"!=\",\"Archived\",false]]",
    "type": "DocType"
@@ -82,14 +82,6 @@
    "type": "DocType"
   },
   {
-   "color": "Orange",
-   "doc_view": "List",
-   "label": "Incident Signals",
-   "link_to": "Forensic Event",
-   "stats_filter": "[]",
-   "type": "DocType"
-  },
-  {
    "color": "Grey",
    "doc_view": "List",
    "label": "Plays",
@@ -100,7 +92,7 @@
   {
    "color": "Green",
    "doc_view": "List",
-   "label": "Operators",
+   "label": "Team",
    "link_to": "Team",
    "stats_filter": "[[\"Team\",\"enabled\",\"=\",1,false]]",
    "type": "DocType"
@@ -126,14 +118,6 @@
    "doc_view": "List",
    "label": "App Releases",
    "link_to": "App Release",
-   "stats_filter": "[]",
-   "type": "DocType"
-  },
-  {
-   "color": "Blue",
-   "doc_view": "List",
-   "label": "Analytics",
-   "link_to": "Site Analytics",
    "stats_filter": "[]",
    "type": "DocType"
   },

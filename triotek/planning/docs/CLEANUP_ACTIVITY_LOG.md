@@ -872,3 +872,10 @@ Reason:
 - Reframed site insights navigation from `Analytics / Reports / Jobs` to `Overview / Performance / Execution` so the analytics area reads more like an operator workflow.
 - Tightened several site analytics card titles toward product-facing language such as `Usage Trend`, `Request Volume`, `Request CPU Load`, and `Operational Analytics`.
 - Updated the analytics card share affordance text so it reads like a deliberate dashboard feature instead of a low-level implementation detail.
+
+## 2026-04-14 - Sidebar and workspace tightened toward the v16-style product shell
+
+- Updated the dashboard sidebar so the main MVP modules are more visible and intentional, especially `Benches` on the real `/benches` route and `Apps` as a first-class product area.
+- Reduced sidebar confusion by promoting the actual product modules and pushing secondary/internal areas lower in the shell.
+- Simplified the Desk workspace content into clearer groups: `Runtime`, `Apps`, `Execution And Evidence`, and `Administration`.
+- Removed duplicate or low-signal workspace shortcuts so the Desk entry surface better matches the MVP product instead of exposing a grab-bag of inherited records.
